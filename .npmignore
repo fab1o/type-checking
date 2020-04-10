@@ -1,0 +1,15 @@
+.git
+.vscode
+.npmrc
+.DS_Store
+src
+test
+.babelrc.json
+.eslintignore
+.eslintrc.json
+.gitignore
+.npmignore
+.prettierignore
+.prettierrc.js
+*.log
+*.map

@@ -1,0 +1,7 @@
+# node_modules is ignored by default
+
+# Bundled/transpiled code
+lib
+
+# Packages
+package-lock.json

@@ -1,0 +1,66 @@
+{
+  "name": "@fab1o/type-checking",
+  "version": "0.0.0",
+  "description": "Throws Error when user input fails to meet params configuration.",
+  "author": {
+    "name": "Fabio Costa",
+    "url": "https://github.com/fab1o"
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fab1o/type-checking"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "private": false,
+  "bugs": {
+    "url": "https://github.com/fab1o/type-checking/issues"
+  },
+  "homepage": "https://github.com/fab1o/type-checking",
+  "keywords": [
+    "typechecking",
+    "typecheck",
+    "Types",
+    "check-types",
+    "auto-check-types"
+  ],
+  "scripts": {
+    "test": "jest",
+    "test:typecheck": "jest -i test/typecheck",
+    "test:class": "jest -i test/class",
+    "test:config": "jest -i test/config",
+    "test:if": "jest -i test/if",
+    "test:atLeastOne": "jest -i test/atLeastOne",
+    "test:function": "jest -i test/function",
+    "test:param": "jest -i test/param",
+    "test:types": "jest -i test/types",
+    "lint": "eslint . --ext .js",
+    "lint-fix": "eslint . --ext .js --fix",
+    "clean": "rm -rf lib",
+    "build": "babel src -d lib",
+    "prettier-lint": "npm run prettier && npm run lint-fix",
+    "prettier": "prettier --ignore-path \".prettierignore\" --write \"./**/*.{js,json,md}\"",
+    "package": "npm run prettier-lint && npm test && npm run clean && npm run build"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.8.4",
+    "@babel/core": "7.9.0",
+    "@babel/plugin-proposal-class-properties": "7.8.3",
+    "@babel/plugin-proposal-private-methods": "7.8.3",
+    "@babel/preset-env": "7.9.5",
+    "@babel/register": "7.9.0",
+    "@fab1o/eslint-config-babel": "1.0.0",
+    "babel-jest": "25.3.0",
+    "babel-plugin-module-resolver": "4.0.0",
+    "jest": "25.3.0"
+  },
+  "dependencies": {
+    "check-types": "11.1.2"
+  },
+  "engines": {
+    "node": ">= 10"
+  },
+  "license": "MIT"
+}
