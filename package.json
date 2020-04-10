@@ -1,6 +1,6 @@
 {
   "name": "@fab1o/type-checking",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Throws Error when user input fails to meet params configuration.",
   "author": {
     "name": "Fabio Costa",
