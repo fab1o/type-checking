@@ -4,28 +4,25 @@ import { isPrime } from './isPrime';
 
 function sumPrimeNumbers(array) {
     const params = {
-        array: Types.array.of.custom(isPrime, 'prime Numbers')
+        array: Types.array.of.custom(isPrime, 'a list of prime Numbers')
     };
 
     typecheck(sumPrimeNumbers, params, arguments);
 
-    return array.reduce((p, c) => {
-        return p + c;
-    });
+    if (array.length > 0) {
+        return array.reduce((p, c) => {
+            return p + c;
+        });
+    }
+
+    return 0;
 }
 
-describe('sumPrimeNumbers', () => {
-    const errorMessage =
-        'sumPrimeNumbers(array) array expected an Array of prime Numbers but received an Array: [].';
-
-    it(errorMessage, () => {
-        try {
+describe('Types.array.of.custom', () => {
+    it('throw no error', () => {
+        expect(() => {
             sumPrimeNumbers([]);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).not.toThrow();
     });
 
     it('null is not an array of prime numbers', () => {

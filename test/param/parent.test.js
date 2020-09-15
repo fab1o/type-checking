@@ -1,10 +1,8 @@
 import { Types, typecheck } from '../../src';
 
-const errorMessage = '{name, { name }} friend.name expected a Number but received null.';
-
 describe('parent param name versus child param name', () => {
-    it(errorMessage, () => {
-        try {
+    it('throw an error - object first', () => {
+        expect(() => {
             typecheck(
                 {
                     name: Types.string,
@@ -14,17 +12,11 @@ describe('parent param name versus child param name', () => {
                 },
                 ['Fabio', { name: null }]
             );
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow('{name, { name }} friend.name expected a Number but received null.');
     });
 
-    const errorMessage2 = '{{ name }, name} name expected a String but received null.';
-
-    it(errorMessage2, () => {
-        try {
+    it('throw an error - object after', () => {
+        expect(() => {
             typecheck(
                 {
                     friend: Types.object({
@@ -34,10 +26,6 @@ describe('parent param name versus child param name', () => {
                 },
                 [{ name: 1 }, null]
             );
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage2);
-        }
+        }).toThrow('{{ name }, name} name expected a String but received null.');
     });
 });

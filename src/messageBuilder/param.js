@@ -1,22 +1,18 @@
-import Check from 'check-types';
-
 import { Config } from '../config';
 
 /**
- *
- * @class TypeChecking.MessageBuilder.Param
- *
+ * @desc Parameter of a method or function or a property of a stand-alone object.
  */
 export class Param {
     /**
      *
      * @param {Object} options
-     * @param {String} options.name Parameter name.
-     * @param {TypeChecking.MessageBuilder.Param} [options.parent=null] Parent param.
-     * @param {Boolean} [options.isNullable=false] Whether param accepts null.
-     * @param {Boolean} [options.isOptional=false] Whether should include brackets or not [ ].
-     * @param {String} [options.type=null] Type name defined in the optionableTypeCreator.
-     * @param {Number} [options.index=null] Position in the params list.
+     * @param {String} options.name - Parameter name.
+     * @param {TypeChecking.MessageBuilder.Param} [options.parent=null] - Parent param.
+     * @param {Boolean} [options.isNullable=false] - Whether param accepts null.
+     * @param {Boolean} [options.isOptional=false] - Whether should include brackets or not [ ].
+     * @param {Boolean} [options.isUndefinable=false] - Whether should include brackets or not [ ].
+     * @param {String} [options.typeName=null] - Type name defined in the optionablevalidateCreator.
      *
      */
     constructor(options) {
@@ -25,55 +21,66 @@ export class Param {
             parent = null,
             isNullable = false,
             isOptional = false,
-            type = null,
-            index = null
+            isUndefinable = false,
+            typeName = null
         } = options;
 
         this.name = name;
         this.parent = parent;
-        this.optional = isOptional;
-        this.type = type;
-        this.index = index;
-        this.nullable = isNullable;
+        this.isNullable = isNullable;
+        this.isOptional = isOptional;
+        this.isUndefinable = isUndefinable;
+        this.typeName = typeName;
+
+        /**
+         * @type {TypeChecking.MessageBuilder.Params|null}
+         */
+        this.params = null;
     }
 
     /**
-     *
-     * @param {Object<TypeChecking.Type>} [params={}] Params built with Types.
-     * @param {TypeChecking.MessageBuilder.Param} [parent=null] Parent in case of param of param.
-     * @desc Converts params built with Types to params built with Param.
-     * @returns {Array<TypeChecking.MessageBuilder.Param>} Array of params.
-     *
+     * @desc Returns whether param is required or not.
+     * @returns {Boolean}
      */
-    static parse(params = {}, parent = null) {
-        if (params === null) {
-            return [];
+    get isRequired() {
+        return this.isOptional === false && this.isUndefinable === false;
+    }
+
+    /**
+     * @desc Returns whether param is non-required or not.
+     * @returns {Boolean}
+     */
+    get isNonRequired() {
+        return this.isOptional || this.isUndefinable;
+    }
+
+    /**
+     * @desc Returns what other values the param accepts. `Config.displayParamExt` must be set to true.
+     * @returns {String}
+     */
+    get extension() {
+        if (Config.displayParamExt === false) {
+            return '';
         }
 
-        return Object.keys(params).map((name, i) => {
-            const paramValidate = params[name];
-            const isOptional = Check.not.assigned(paramValidate.optional);
-            const { type } = paramValidate;
-            const index = parent != null ? i + 10 * parent.index : i;
+        if (this.isOptional) {
+            return ' or null or undefined';
+        }
 
-            return new Param({
-                name,
-                parent,
-                isOptional,
-                type,
-                index
-            });
-        });
+        if (this.isNullable) {
+            return ' or null';
+        }
+
+        if (this.isUndefinable) {
+            return ' or undefined';
+        }
+
+        return '';
     }
 
     toString() {
-        const openBracket = Config.optionalBracketsOn && this.optional ? '[' : '';
-        const closBracket = Config.optionalBracketsOn && this.optional ? ']' : '';
+        const par = Config.parentsOn && this.parent != null ? `${this.parent.name}.` : '';
 
-        if (Config.parentsOn && this.parent != null) {
-            return `${openBracket}${this.parent.name}.${this.name}${closBracket}`;
-        }
-
-        return `${openBracket}${this.name}${closBracket}`;
+        return `${par}${this.name}`;
     }
 }

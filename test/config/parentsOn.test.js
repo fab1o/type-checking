@@ -10,11 +10,9 @@ function parentsOn() {
     typecheck(parentsOn, params, arguments);
 }
 
-const errorMessage = 'parentsOn({ name }) name expected a String but received null.';
-
 describe('Config.parentsOn', () => {
-    it(errorMessage, () => {
-        try {
+    it('false', () => {
+        expect(() => {
             Config.setup({
                 parentsOn: false
             });
@@ -22,26 +20,16 @@ describe('Config.parentsOn', () => {
             parentsOn({
                 name: null
             });
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow('parentsOn({ name }) name expected a String but received null.');
     });
 
-    const errorMessage2 = 'parentsOn({ name }) options.name expected a String but received null.';
-
-    it(errorMessage2, () => {
-        try {
+    it('reset', () => {
+        expect(() => {
             Config.reset();
 
             parentsOn({
                 name: null
             });
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage2);
-        }
+        }).toThrow('parentsOn({ name }) options.name expected a String but received null.');
     });
 });

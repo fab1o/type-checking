@@ -2,9 +2,9 @@ import { Types, typecheck } from '../../../src';
 
 import { isPrime } from './isPrime';
 
-function sumPrimeNumbers(prime1) {
+function sumPrimeNumbers() {
     const params = {
-        prime1: Types.custom(isPrime, '')
+        prime1: Types.custom(isPrime)
     };
 
     typecheck(sumPrimeNumbers, params, arguments);
@@ -13,15 +13,11 @@ function sumPrimeNumbers(prime1) {
 }
 
 describe('Types.custom', () => {
-    const errorMessage = 'sumPrimeNumbers(prime1) prime1 expected  but received a Number: 66.';
-
-    it(errorMessage, () => {
-        try {
+    it('throw an error', () => {
+        expect(() => {
             sumPrimeNumbers(66);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow(
+            'sumPrimeNumbers(prime1) prime1 expected custom but received a Number: 66.'
+        );
     });
 });

@@ -1,15 +1,9 @@
 import Parent from './parent';
 
-const errorMessage = 'Parent(name) name expected a String but received undefined.';
-
-describe('child', () => {
-    it(errorMessage, () => {
-        try {
+describe('Parent', () => {
+    it('throw an error', () => {
+        expect(() => {
             new Parent();
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow('Parent(name) name expected a String but received undefined.');
     });
 });

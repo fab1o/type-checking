@@ -2,21 +2,15 @@ import { Types, typecheck } from '../../src';
 
 import Parent from './relationship/constructor/parent';
 
-const errorMessage = '{ok} ok expected a Boolean but received Parent.';
-
-describe('received type for a class constructor', () => {
-    it(errorMessage, () => {
-        try {
+describe('Received type for a class constructor', () => {
+    it('wrong argument is provided', () => {
+        expect(() => {
             typecheck(
                 {
                     ok: Types.boolean
                 },
                 [Parent]
             );
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow('{ok} ok expected a Boolean but received Parent.');
     });
 });

@@ -3,7 +3,7 @@ import { Types, typecheck } from '../../../../src';
 import Parent from './parent';
 
 export default class Child extends Parent {
-    constructor(name, code, isActive) {
+    constructor(name) {
         super(name);
 
         const params = {

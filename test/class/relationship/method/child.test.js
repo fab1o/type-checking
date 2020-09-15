@@ -1,20 +1,15 @@
 import Child from './child';
 
-const errorMessage =
-    'Child.method({ code, isActive, ... }) options.code expected a Number but received undefined.';
-
-describe('child method', () => {
-    it(errorMessage, () => {
-        try {
+describe('Child method', () => {
+    it('throw an error', () => {
+        expect(() => {
             const child = new Child();
 
             child.method({
                 name: 'Fabio'
             });
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow(
+            'Child.method({ code, isActive, ... }) options.code expected a Number but received undefined.'
+        );
     });
 });

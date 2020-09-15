@@ -1,52 +1,44 @@
 import { Types, typecheck } from '../../src';
 
-function addSudentWithOptions(options) {
+function addAccount() {
     const innerParams = {
         name: Types.string.optional,
         year: Types.number.optional
     };
 
-    typecheck.atLeastOne(addSudentWithOptions, innerParams, options);
+    typecheck.atLeastOne(addAccount, innerParams, arguments);
 }
 
 describe('typecheck.atLeastOne with Options object', () => {
-    it('not throw an error', () => {
+    it('throws an error', () => {
         expect(() => {
-            addSudentWithOptions({
+            addAccount({
                 name: 'Fabio'
             });
+        }).toThrow(
+            'addAccount(name, year) name expected a String or null or undefined but received an Object: {name:"Fabio"}.'
+        );
+    });
+
+    it('does not throw an error', () => {
+        expect(() => {
+            addAccount('Fabio');
         }).not.toThrow();
     });
 
-    it('throw an error', () => {
+    it('no argument is provided', () => {
         expect(() => {
-            addSudentWithOptions('Fabio');
-        }).toThrow(SyntaxError);
+            addAccount({});
+        }).toThrow(
+            'addAccount(name, year) name expected a String or null or undefined but received an Object: {}.'
+        );
     });
 
-    const errorMessage =
-        'addSudentWithOptions({ name, year }) at least one parameter must be provided.';
-
-    it(errorMessage, () => {
-        try {
-            addSudentWithOptions({});
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
-    });
-
-    const errorMessage2 =
-        'typecheck(...) arguments expected an Array or an Object. Make sure you configure params and invoke typecheck correctly.';
-
-    it(errorMessage2, () => {
-        try {
-            addSudentWithOptions(false);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage2);
-        }
+    it('wrong argument is provided', () => {
+        expect(() => {
+            addAccount(false);
+        }).toThrow(
+            'addAccount(name, year) name expected a String or null or undefined but received a Boolean: false.'
+        );
     });
 });

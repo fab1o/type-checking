@@ -4,7 +4,10 @@ function sumNumbers(options) {
     const params = {
         options: Types.object({
             num1: Types.number,
-            num2: Types.custom(customValidator, 'if options.num1 and options.num3 are provided'),
+            num2: Types.custom(
+                customValidator,
+                'if options.num1 and options.num3 are provided'
+            ),
             num3: Types.number
         })
     };
@@ -25,17 +28,12 @@ function customValidator(value, input) {
 }
 
 describe('sumNumbers', () => {
-    const errorMessage =
-        'sumNumbers({ num1, num2, num3 }) options.num2 expected if options.num1 and options.num3 are provided but received undefined.';
-
-    it(errorMessage, () => {
-        try {
+    it('throw an error', () => {
+        expect(() => {
             sumNumbers({ num1: 7, num3: 10 });
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow(
+            'sumNumbers({ num1, num2, num3 }) options.num2 expected if options.num1 and options.num3 are provided but received undefined.'
+        );
     });
 
     it('sum correctly', () => {

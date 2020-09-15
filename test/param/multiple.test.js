@@ -1,10 +1,8 @@
 import { Types, typecheck } from '../../src';
 
-const errorMessage = '{name, age} age expected a Number but received undefined.';
-
 describe('param multiple', () => {
-    it(errorMessage, () => {
-        try {
+    it('throw an error', () => {
+        expect(() => {
             typecheck(
                 {
                     name: Types.string,
@@ -12,10 +10,6 @@ describe('param multiple', () => {
                 },
                 ['Fabio']
             );
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow('{name, age} age expected a Number but received undefined.');
     });
 });

@@ -1,45 +1,35 @@
 import { Config, Types, typecheck } from '../../src';
 
-function withPropsMessage() {
+function withProps() {
     const params = {
         options: Types.object({
             name: Types.string
         })
     };
 
-    typecheck(withPropsMessage, params, arguments);
+    typecheck(withProps, params, arguments);
 }
 
-const errorMessage =
-    'withPropsMessage(options) options expected an Object with attributes but received undefined.';
-
 describe('Config.withPropsMessage', () => {
-    it(errorMessage, () => {
-        try {
+    it('with attributes', () => {
+        expect(() => {
             Config.setup({
                 withPropsMessage: 'with attributes'
             });
 
-            withPropsMessage();
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+            withProps();
+        }).toThrow(
+            'withProps(options) options expected an Object with attributes but received undefined.'
+        );
     });
 
-    const errorMessage2 =
-        'withPropsMessage(options) options expected an Object with properties but received undefined.';
-
-    it(errorMessage2, () => {
-        try {
+    it('reset', () => {
+        expect(() => {
             Config.reset();
 
-            withPropsMessage();
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage2);
-        }
+            withProps();
+        }).toThrow(
+            'withProps(options) options expected an Object with properties but received undefined.'
+        );
     });
 });

@@ -1,20 +1,14 @@
 import { Types, typecheck } from '../../src';
 
-const errorMessage = '{year} year expected a String but received a Boolean: false.';
-
-describe('received a Boolean', () => {
-    it(errorMessage, () => {
-        try {
+describe('Types.boolean', () => {
+    it('throw an error', () => {
+        expect(() => {
             typecheck(
                 {
                     year: Types.string
                 },
                 [false]
             );
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow('{year} year expected a String but received a Boolean: false.');
     });
 });

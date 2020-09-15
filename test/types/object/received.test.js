@@ -1,28 +1,19 @@
 import { Types, typecheck } from '../../../src';
 
-describe('received messages', () => {
-    const emptyObjMessage = '{ok} ok expected a Boolean but received an Object: {}.';
-
-    it(emptyObjMessage, () => {
-        try {
+describe('Types.object - received messages', () => {
+    it('throw an error', () => {
+        expect(() => {
             typecheck(
                 {
                     ok: Types.boolean
                 },
                 [{}]
             );
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(emptyObjMessage);
-        }
+        }).toThrow('{ok} ok expected a Boolean but received an Object: {}.');
     });
 
-    const afewMessage =
-        '{ok} ok expected a Boolean but received an Object: {name:"Fabio", code:1, ...}.';
-
-    it(afewMessage, () => {
-        try {
+    it('multiple properties', () => {
+        expect(() => {
             typecheck(
                 {
                     ok: Types.boolean
@@ -35,18 +26,13 @@ describe('received messages', () => {
                     }
                 ]
             );
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(afewMessage);
-        }
+        }).toThrow(
+            '{ok} ok expected a Boolean but received an Object: {name:"Fabio", code:1, ...}.'
+        );
     });
 
-    const moreObjMessage =
-        '{ok} ok expected a Boolean but received an Object: {person:{...}, code:1, ...}.';
-
-    it(moreObjMessage, () => {
-        try {
+    it('object in object', () => {
+        expect(() => {
             typecheck(
                 {
                     ok: Types.boolean
@@ -61,10 +47,23 @@ describe('received messages', () => {
                     }
                 ]
             );
+        }).toThrow(
+            '{ok} ok expected a Boolean but received an Object: {person:{...}, code:1, ...}.'
+        );
+    });
 
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(moreObjMessage);
-        }
+    it('circualr reference', () => {
+        expect(() => {
+            const obj = {};
+
+            obj.myself = obj;
+
+            typecheck(
+                {
+                    ok: Types.boolean
+                },
+                [obj]
+            );
+        }).toThrow('{ok} ok expected a Boolean but received an Object: {myself:{...}}.');
     });
 });

@@ -1,7 +1,7 @@
 import { Types, typecheck } from '../../../src';
 
 export default class Class {
-    static method(options) {
+    static method() {
         const params = {
             options: Types.object({
                 name: Types.string,

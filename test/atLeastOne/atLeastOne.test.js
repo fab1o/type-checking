@@ -1,6 +1,6 @@
 import { Types, typecheck } from '../../src';
 
-function addSudent(name, year) {
+function addSudent() {
     const params = {
         name: Types.string.optional,
         year: Types.number.optional
@@ -24,46 +24,17 @@ describe('typecheck.atLeastOne', () => {
         }).not.toThrow();
     });
 
-    const errorMessage = '{name, year} at least one parameter must be provided.';
-
-    it(errorMessage, () => {
-        try {
-            typecheck.atLeastOne(
-                {
-                    name: Types.string.optional,
-                    year: Types.number.optional
-                },
-                []
-            );
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
-    });
-
-    const errorMessage2 = 'addSudent(name, year) at least one parameter must be provided.';
-
-    it(errorMessage2, () => {
-        try {
+    it('no argument is provided', () => {
+        expect(() => {
             addSudent();
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage2);
-        }
+        }).toThrow('addSudent(name, year) at least one parameter must be provided.');
     });
 
-    const errorMessage3 =
-        'addSudent(name, year) [name] expected a String but received a Boolean: false.';
-
-    it(errorMessage3, () => {
-        try {
+    it('throw an error', () => {
+        expect(() => {
             addSudent(false);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage3);
-        }
+        }).toThrow(
+            'addSudent(name, year) name expected a String or null or undefined but received a Boolean: false.'
+        );
     });
 });

@@ -2,21 +2,28 @@ import { Types, typecheck } from '../../src';
 
 class Student {}
 
-const errorMessage = '{student} student expected an instance of Student but received undefined.';
-
 describe('Types.instanceScrict', () => {
-    it(errorMessage, () => {
-        try {
+    it('throw an error', () => {
+        expect(() => {
             typecheck(
                 {
                     student: Types.instanceStrict(Student)
                 },
                 []
             );
+        }).toThrow(
+            '{student} student expected an instance of Student but received undefined.'
+        );
+    });
 
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+    it('expect to not throw an Error', () => {
+        expect(() => {
+            typecheck(
+                {
+                    date: Types.instanceStrict(Date)
+                },
+                [new Date()]
+            );
+        }).not.toThrow();
     });
 });

@@ -1,14 +1,25 @@
 import { Types, typecheck } from '../../src';
 
-describe('null', () => {
-    it('an Error is thrown when passing null to a required param.', () => {
+describe('Types.null', () => {
+    it('throws no error', () => {
         expect(() => {
             typecheck(
                 {
-                    name: Types.string
+                    name: Types.null
                 },
                 [null]
             );
-        }).toThrow(SyntaxError);
+        }).not.toThrow();
+    });
+
+    it('throws error', () => {
+        expect(() => {
+            typecheck(
+                {
+                    name: Types.null
+                },
+                []
+            );
+        }).toThrow('{name} name expected null but received undefined.');
     });
 });

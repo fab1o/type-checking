@@ -11,33 +11,31 @@ function objectEnclosedByArray() {
 }
 
 describe('param enclosed', () => {
-    const errorMessage =
-        'objectEnclosedByArray(objs) [objs] expected an Array of objects with properties but received an Array: [{}].';
-
-    it(errorMessage, () => {
-        try {
-            objectEnclosedByArray([{}]);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+    it('throws an error', () => {
+        expect(() => {
+            objectEnclosedByArray([]);
+        }).toThrow(
+            'objectEnclosedByArray([{ name }]) objs.name expected a String but received undefined.'
+        );
     });
 
-    const errorMessage2 =
-        'objectEnclosedByArray([{ name }]) objs.name expected a String but received null.';
+    it('throws an error with empty object', () => {
+        expect(() => {
+            objectEnclosedByArray([{}]);
+        }).toThrow(
+            'objectEnclosedByArray([{ name }]) objs.name expected a String but received undefined.'
+        );
+    });
 
-    it(errorMessage2, () => {
-        try {
+    it('throws another error', () => {
+        expect(() => {
             objectEnclosedByArray([
                 {
                     name: null
                 }
             ]);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage2);
-        }
+        }).toThrow(
+            'objectEnclosedByArray([{ name }]) objs.name expected a String but received null.'
+        );
     });
 });

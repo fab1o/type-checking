@@ -1,7 +1,7 @@
 {
   "name": "@fab1o/type-checking",
-  "version": "1.0.0",
-  "description": "Throws Error when user input fails to meet params configuration.",
+  "version": "1.2.0",
+  "description": "Throws Error when data fails to meet params.",
   "author": {
     "name": "Fabio Costa",
     "url": "https://github.com/fab1o"
@@ -21,46 +21,47 @@
   "homepage": "https://github.com/fab1o/type-checking",
   "keywords": [
     "typechecking",
+    "typechecker",
     "typecheck",
-    "Types",
-    "check-types",
-    "auto-check-types"
+    "types",
+    "check",
+    "checker",
+    "assert",
+    "assertion",
+    "error",
+    "validator",
+    "validation"
   ],
   "scripts": {
-    "test": "jest",
-    "test:typecheck": "jest -i test/typecheck",
-    "test:class": "jest -i test/class",
-    "test:config": "jest -i test/config",
-    "test:if": "jest -i test/if",
-    "test:atLeastOne": "jest -i test/atLeastOne",
-    "test:function": "jest -i test/function",
-    "test:param": "jest -i test/param",
-    "test:types": "jest -i test/types",
-    "lint": "eslint . --ext .js",
-    "lint-fix": "eslint . --ext .js --fix",
+    "build": "npm run docs && npm test && npm run clean && npm run build:only",
+    "docs": "doctoc docs/ --notitle && npm run lint-fix",
+    "doc": "npm run docs",
+    "build:only": "babel src -d lib",
     "clean": "rm -rf lib",
-    "build": "babel src -d lib",
-    "prettier-lint": "npm run prettier && npm run lint-fix",
-    "prettier": "prettier --ignore-path \".prettierignore\" --write \"./**/*.{js,json,md}\"",
-    "package": "npm run prettier-lint && npm test && npm run clean && npm run build"
-  },
-  "devDependencies": {
-    "@babel/cli": "7.8.4",
-    "@babel/core": "7.9.0",
-    "@babel/plugin-proposal-class-properties": "7.8.3",
-    "@babel/plugin-proposal-private-methods": "7.8.3",
-    "@babel/preset-env": "7.9.5",
-    "@babel/register": "7.9.0",
-    "@fab1o/eslint-config-babel": "1.0.0",
-    "babel-jest": "25.3.0",
-    "babel-plugin-module-resolver": "4.0.0",
-    "jest": "25.3.0"
-  },
-  "dependencies": {
-    "check-types": "11.1.2"
+    "lint": "eslint . --ext .js",
+    "lint-fix": "prettier --ignore-path \".prettierignore\" --write \"./**/*.{js,ts,json,md}\" && eslint . --ext .js --fix",
+    "test": "jest",
+    "test:config": "jest -i test/config",
+    "test:atLeastOne": "jest -i test/atLeastOne",
+    "test:types:object": "jest -i test/types/object",
+    "test:types:nonEmptyObject": "jest -i test/types/nonEmptyObject"
   },
   "engines": {
     "node": ">= 10"
   },
+  "devDependencies": {
+    "@babel/cli": "7.11.6",
+    "@babel/core": "7.11.6",
+    "@babel/preset-env": "7.11.5",
+    "@babel/register": "7.11.5",
+    "@fab1o/eslint-config-babel": "1.2.0",
+    "babel-jest": "26.3.0",
+    "doctoc": "1.4.0",
+    "jest": "26.4.2"
+  },
+  "dependencies": {
+    "@fab1o/check-types": "12.0.2"
+  },
+  "types": "index.d.ts",
   "license": "MIT"
 }

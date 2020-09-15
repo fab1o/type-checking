@@ -1,31 +1,35 @@
-import Check from 'check-types';
+import Check from '@fab1o/check-types';
 
 /**
- * @typedef {Object} UserInputTypes
- * @property {String} object Object.
- * @property {String} arguments JavaScript arguments or Rest parameter.
- * @property {String} none None.
+ * @enum {String}
+ * @typedef {Object} UserInputType
+ * @property {String} object 'object' - An Object.
+ * @property {String} arguments 'arguments' - JavaScript arguments.
+ * @property {String} none 'none' - Neither Object nor arguments.
  */
-export const UserInputTypes = {
+export const UserInputType = {
     object: 'object',
     arguments: 'arguments',
     none: 'none'
 };
 
 /**
- *
  * @param {*} input User input.
  * @desc Gets the type of user input that was given.
- * @returns {Boolean}
- *
+ * @returns {UserInputType}
  */
 export function getUserInputType(input) {
-    if (Check.arrayLike(input) && Check.not.string(input)) {
-        return UserInputTypes.arguments;
-    }
+    // Due to how check-types considers an object that has a length prop to be an arrayLike,
+    // the order of IFs must be the following:
+    // 1) check for an object
+    // 2) check for an arrayLike
+    // Do not change this order!
     if (Check.object(input)) {
-        return UserInputTypes.object;
+        return UserInputType.object;
+    }
+    if (Check.arrayLike(input) && Check.not.string(input)) {
+        return UserInputType.arguments;
     }
 
-    return UserInputTypes.none;
+    return UserInputType.none;
 }

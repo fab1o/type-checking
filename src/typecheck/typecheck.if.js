@@ -1,73 +1,67 @@
-import { assert } from 'check-types';
+import Check from '@fab1o/check-types';
 
 import { Config } from '../config';
-import { MethodSignature, MessageBuilder } from '../messageBuilder';
+import { MessageBuilder, MethodSignature } from '../messageBuilder';
 
-import { composeOverloading } from './util';
 import { typecheck } from './typecheck';
+import { composeOverloading } from './util';
 
 /**
+ * @access public
+ * @typedef {Object} Args
+ * @property {Function|Object|String} [object] - Class, instance or object name.
+ * @property {Function|String} [method] - Function or method name.
+ * @property {Function} validator - Custom function that returns falsy/truthy.
+ * @property {String} message - Error message that describes what is expected.
+ * @property {Error} [ErrorType=Config.ErrorType] - The Error type to throw.
  *
- * @param {Object} [object] Class instance or object.
- * @param {Function} [method] Function or method.
- * @param {Function} [customValidator=() => false] Custom function that returns falsy/truthy.
- * @param {String} [customMessage=''] Error message that describes what is expected.
- * @param {Error} [ErrorType=Config.Error] The Error type to throw.
- * @desc Calls a custom validator function and throws an Error if it returns falsy. This is the
- * equilavent of Check.assert but for functions.
- * @throws {Error} When typechecking fails.
+ * @param {...Args} args
+ * @desc Calls a given validator function and throws an Error if it returns falsy.
+ * @throws {Error} When given validator function returns falsy.
  * @example
- * typecheck.if(this, this.method, customValidator, customMessage, Error);
- *
- * typecheck.if(this, this.method, customValidator, customMessage);
- *
- * typecheck.if(this, customValidator, customMessage);
- *
- * typecheck.if(func, customValidator, customMessage);
- *
- * typecheck.if(customValidator, customMessage);
- *
+ * typecheck.if(this, this.method, validator, message, Error);
+ * typecheck.if(this, this.method, validator, message);
+ * typecheck.if(this, validator, message);
+ * typecheck.if(func, validator, message);
+ * typecheck.if(validator, message);
  */
 typecheck.if = (...args) => {
     const {
         signature,
-        a: object,
-        b: method,
-        c: customValidator,
-        d: customMessage,
-        e: ErrorType = Config.Error
-    } = composeOverloading(args);
-
-    assert.function(
-        customValidator,
-        `${signature} customValidator ${Config.expectedMessage} a Function.`,
-        Config.DefaultError
-    );
-
-    assert.string(
-        customMessage,
-        `${signature} customMessage ${Config.expectedMessage} a String.`,
-        Config.DefaultError
-    );
-
-    const methodSignature = new MethodSignature({
         object,
-        method
-    });
+        method,
+        c: validator,
+        d: message,
+        ErrorType = Config.ErrorType
+    } = composeOverloading(args, 'typecheck.if');
 
-    const messageBuilder = new MessageBuilder(methodSignature);
+    if (Check.not.function(validator)) {
+        throw SyntaxError(
+            `${signature} validator expected a Function that returns boolean.`
+        );
+    }
 
-    const errorMessage = messageBuilder.buildCustomMessage(customMessage);
+    if (Check.not.string(message)) {
+        throw SyntaxError(`${signature} message expected a String.`);
+    }
 
     let isOk = false;
 
     try {
-        isOk = customValidator();
+        isOk = validator();
     } catch (ex) {
-        throw new Config.DefaultError(
-            `${signature} Your custom validator function threw an error: ${ex.message}`
-        );
+        throw SyntaxError(`${signature} validator function threw an error: ${ex.message}`);
     }
 
-    assert(isOk, errorMessage, ErrorType);
+    if (isOk === false) {
+        const methodSignature = new MethodSignature({
+            object,
+            method
+        });
+
+        const messageBuilder = new MessageBuilder(methodSignature);
+        const errorMessage = messageBuilder.buildCustomMessage(message);
+
+        throw new ErrorType(errorMessage);
+    }
 };

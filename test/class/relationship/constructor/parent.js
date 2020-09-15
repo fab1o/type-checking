@@ -1,7 +1,7 @@
 import { Types, typecheck } from '../../../../src';
 
 export default class Parent {
-    constructor(name) {
+    constructor() {
         const params = {
             name: Types.string
         };

@@ -1,20 +1,49 @@
 import { Types, typecheck } from '../../src';
 
-const errorMessage = '{code} code expected a Number between 6 and 9 but received a Number: 1.';
-
 describe('Types.between', () => {
-    it(errorMessage, () => {
-        try {
+    it('throw an error', () => {
+        expect(() => {
             typecheck(
                 {
-                    code: Types.between(6, 9)
+                    code: Types.between(1, 3)
                 },
                 [1]
             );
+        }).toThrow(
+            '{code} code expected a Number between 1 and 3 but received a Number: 1.'
+        );
+    });
 
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+    it('an Error is not thrown.', () => {
+        expect(() => {
+            typecheck(
+                {
+                    code: Types.between(1, 3)
+                },
+                [2]
+            );
+        }).not.toThrow();
+    });
+
+    it('an Error is not thrown when between is optional.', () => {
+        expect(() => {
+            typecheck(
+                {
+                    code: Types.between(1, 3).optional
+                },
+                []
+            );
+        }).not.toThrow();
+    });
+
+    it('an Error is not thrown when between is nullable.', () => {
+        expect(() => {
+            typecheck(
+                {
+                    code: Types.between(1, 3).nullable
+                },
+                [null]
+            );
+        }).not.toThrow();
     });
 });

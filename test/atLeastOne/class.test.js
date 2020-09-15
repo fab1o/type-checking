@@ -1,7 +1,7 @@
 import { typecheck, Types } from '../../src';
 
 class Student {
-    methodWithArgs(name, year) {
+    methodWithArgs() {
         const params = {
             name: Types.string.optional,
             year: Types.number.optional
@@ -12,20 +12,13 @@ class Student {
 }
 
 describe('typecheck.atLeastOne in a class', () => {
-    const errorMessage =
-        'Student.methodWithArgs(name, year) at least one parameter must be provided.';
-
-    it(errorMessage, () => {
-        try {
-            const student = new Student({
-                name: 'Fabio'
-            });
+    it('no argument is provided', () => {
+        expect(() => {
+            const student = new Student();
 
             student.methodWithArgs();
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow(
+            'Student.methodWithArgs(name, year) at least one parameter must be provided.'
+        );
     });
 });

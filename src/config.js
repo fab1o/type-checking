@@ -1,181 +1,187 @@
-import Check from 'check-types';
+/* eslint-disable no-underscore-dangle */
+import Check from '@fab1o/check-types';
 
 const DEFAULT_ETCETERA = true;
 const DEFAULT_PARENTS = true;
-const DEFAULT_OPTIONAL_BRACKETS = true;
+const DEFAULT_DISPLAY_PARAM_EXT = true;
+
 const DEFAULT_EXPECTED_MSG = 'expected';
 const DEFAULT_RECEIVED_MSG = 'but received';
 const DEFAULT_WITH_PROPS_MSG = 'with properties';
-const DEFAULT_ERROR_TYPE = SyntaxError;
 
+const DEFAULT_NAME_METHOD_PRIORITY = 'name';
+
+let _etceteraOn = DEFAULT_ETCETERA;
+let _parentsOn = DEFAULT_PARENTS;
+let _displayParamExt = DEFAULT_DISPLAY_PARAM_EXT;
+let _expectedMessage = DEFAULT_EXPECTED_MSG;
+let _receivedMessage = DEFAULT_RECEIVED_MSG;
+let _withPropsMessage = DEFAULT_WITH_PROPS_MSG;
+let _nameMethodPriority = DEFAULT_NAME_METHOD_PRIORITY;
+let _errorType = SyntaxError;
+
+/**
+ * @access public
+ * @desc Configure TypeChecking.
+ * @example
+ * Config.setup({
+ *   ErrorType: MyCustomError,
+ *   parentsOn: false,
+ *   nameMethodPriority: Config.NameMethod.toString
+ * });
+ */
 export class Config {
-    // private props
-    static #etceteraOn = DEFAULT_ETCETERA;
-
-    static #parentsOn = DEFAULT_PARENTS;
-
-    static #optionalBracketsOn = DEFAULT_OPTIONAL_BRACKETS;
-
-    static #expectedMessage = DEFAULT_EXPECTED_MSG;
-
-    static #receivedMessage = DEFAULT_RECEIVED_MSG;
-
-    static #withPropsMessage = DEFAULT_WITH_PROPS_MSG;
-
-    static #errorType = DEFAULT_ERROR_TYPE;
-
     /**
-     *
-     * @desc The "an Array of..." message part.
+     * @enum {String}
+     * @desc Enum for possible name methods.
      * @returns {String}
-     *
      */
-    static get arrayOfMessage() {
-        return 'an Array of ';
+    static get NameMethod() {
+        return {
+            name: 'name',
+            toString: 'toString'
+        };
     }
 
     /**
-     *
+     * @desc The "an Array of..." message part.
+     * @returns {String}
+     */
+    static get arrayOfMessage() {
+        return 'an Array of';
+    }
+
+    /**
      * @desc The ", ... " part in the parameters list.
      * @returns {Boolean}
-     *
      */
     static get etceteraOn() {
-        return Config.#etceteraOn;
+        return _etceteraOn;
     }
 
     static set etceteraOn(value) {
         if (Check.boolean(value)) {
-            Config.#etceteraOn = value;
+            _etceteraOn = value;
         }
     }
 
     /**
-     *
-     * @desc Whether the param's parent name is in the errorType message.
+     * @desc Whether the param's parent name is in the error message.
      * @returns {Boolean}
-     *
      */
     static get parentsOn() {
-        return Config.#parentsOn;
+        return _parentsOn;
     }
 
     static set parentsOn(value) {
         if (Check.boolean(value)) {
-            Config.#parentsOn = value;
+            _parentsOn = value;
         }
     }
 
     /**
-     *
-     * @desc Whether message includes square brackets for optional params.
+     * @desc Whether message informs user it accepts null or undefined.
      * @returns {Boolean}
-     *
      */
-    static get optionalBracketsOn() {
-        return Config.#optionalBracketsOn;
+    static get displayParamExt() {
+        return _displayParamExt;
     }
 
-    static set optionalBracketsOn(value) {
+    static set displayParamExt(value) {
         if (Check.boolean(value)) {
-            Config.#optionalBracketsOn = value;
+            _displayParamExt = value;
         }
     }
 
     /**
-     *
      * @desc The "expected..." message part.
      * @returns {String}
-     *
      */
     static get expectedMessage() {
-        return Config.#expectedMessage;
+        return _expectedMessage;
     }
 
     static set expectedMessage(value) {
         if (Check.string(value)) {
-            Config.#expectedMessage = value;
+            _expectedMessage = value;
         }
     }
 
     /**
-     *
      * @desc The "but received..." message part.
      * @returns {String}
-     *
      */
     static get receivedMessage() {
-        return Config.#receivedMessage;
+        return _receivedMessage;
     }
 
     static set receivedMessage(value) {
         if (Check.string(value)) {
-            Config.#receivedMessage = value;
+            _receivedMessage = value;
         }
     }
 
     /**
-     *
+     * @desc The method used as a priority to get the type name for the error message.
+     * @returns {String}
+     */
+    static get nameMethodPriority() {
+        return _nameMethodPriority;
+    }
+
+    static set nameMethodPriority(value) {
+        if (Check.string(value)) {
+            _nameMethodPriority = value;
+        }
+    }
+
+    /**
      * @desc The "with properties..." message part.
      * @returns {String}
-     *
      */
     static get withPropsMessage() {
-        return Config.#withPropsMessage;
+        return _withPropsMessage;
     }
 
     static set withPropsMessage(value) {
         if (Check.string(value)) {
-            Config.#withPropsMessage = value;
+            _withPropsMessage = value;
         }
     }
 
     /**
-     *
-     * @desc The Default Error type.
-     * @returns {Error}
-     *
-     */
-    static get DefaultError() {
-        return DEFAULT_ERROR_TYPE;
-    }
-
-    /**
-     *
      * @desc The Error type to throw.
      * @returns {Error}
-     *
      */
-    static get Error() {
-        return Config.#errorType;
+    static get ErrorType() {
+        return _errorType;
     }
 
-    static set Error(value) {
+    static set ErrorType(value) {
         if (Check.instanceStrict(value.prototype, Error)) {
-            Config.#errorType = value;
+            _errorType = value;
         }
     }
 
     /**
-     *
      * @param {Object} [options]
-     * @param {Error} [options.errorType=SyntaxError] The Error to throw by a bad typecheck.
-     * @param {Boolean} [options.etcetera=true] If message includes "...".
-     * @param {Boolean} [options.parents=true] If message includes the param's parent name.
-     * @param {Boolean} [options.optionalBracketsOn=true] If message includes square brackets for optional params.
-     * @param {String} [options.expectedMessage='expected'] The "expected..." message part.
-     * @param {String} [options.receivedMessage='but received'] The "but received..." message part.
-     * @param {String} [options.withPropsMessage='with properties'] The "with properties..." message part.
-     * @desc Setup config.
-     *
+     * @param {Error} [options.ErrorType=SyntaxError] - The Error to throw by a bad typecheck.
+     * @param {Boolean} [options.etcetera=true] - If message includes "...".
+     * @param {Boolean} [options.parents=true] - If message includes the param's parent name.
+     * @param {Boolean} [options.displayParamExt=true] - If message informs user it accepts null or undefined.
+     * @param {String} [options.expectedMessage='expected'] - The "expected..." message part.
+     * @param {String} [options.receivedMessage='but received'] - The "but received..." message part.
+     * @param {String} [options.withPropsMessage='with properties'] - The "with properties..." message part.
+     * @param {String} [options.nameMethodPriority=Config.NameMethod.name] - The method used as a priority to get the object name for the error message.
+     * @desc Setup the config.
      */
     static setup(options = {}) {
         if (Check.not.object(options)) {
             return;
         }
 
-        if (Check.assigned(options.errorType)) {
-            Config.Error = options.errorType;
+        if (Check.assigned(options.ErrorType)) {
+            Config.ErrorType = options.ErrorType;
         }
 
         if (Check.assigned(options.etceteraOn)) {
@@ -186,8 +192,8 @@ export class Config {
             Config.parentsOn = options.parentsOn;
         }
 
-        if (Check.assigned(options.optionalBracketsOn)) {
-            Config.optionalBracketsOn = options.optionalBracketsOn;
+        if (Check.assigned(options.displayParamExt)) {
+            Config.displayParamExt = options.displayParamExt;
         }
 
         if (Check.assigned(options.expectedMessage)) {
@@ -201,31 +207,33 @@ export class Config {
         if (Check.assigned(options.withPropsMessage)) {
             Config.withPropsMessage = options.withPropsMessage;
         }
+
+        if (Check.assigned(options.nameMethodPriority)) {
+            Config.nameMethodPriority = options.nameMethodPriority;
+        }
     }
 
     /**
-     *
-     * @desc Resets all config to factory default.
-     *
+     * @desc Resets all config to default.
      */
     static reset() {
-        Config.#etceteraOn = DEFAULT_ETCETERA;
-        Config.#parentsOn = DEFAULT_PARENTS;
-        Config.#optionalBracketsOn = DEFAULT_OPTIONAL_BRACKETS;
+        _etceteraOn = DEFAULT_ETCETERA;
+        _parentsOn = DEFAULT_PARENTS;
+        _displayParamExt = DEFAULT_DISPLAY_PARAM_EXT;
 
-        Config.#expectedMessage = DEFAULT_EXPECTED_MSG;
-        Config.#receivedMessage = DEFAULT_RECEIVED_MSG;
-        Config.#withPropsMessage = DEFAULT_WITH_PROPS_MSG;
+        _expectedMessage = DEFAULT_EXPECTED_MSG;
+        _receivedMessage = DEFAULT_RECEIVED_MSG;
+        _withPropsMessage = DEFAULT_WITH_PROPS_MSG;
+
+        _nameMethodPriority = DEFAULT_NAME_METHOD_PRIORITY;
 
         Config.resetErrorType();
     }
 
     /**
-     *
-     * @desc Resets all config to factory default.
-     *
+     * @desc Resets the errorType config to default.
      */
     static resetErrorType() {
-        Config.#errorType = DEFAULT_ERROR_TYPE;
+        _errorType = SyntaxError;
     }
 }

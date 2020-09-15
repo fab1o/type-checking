@@ -1,41 +1,29 @@
 import { Config, Types, typecheck } from '../../src';
 
-function expectedMessage() {
+function expectName() {
     const params = {
         name: Types.string
     };
 
-    typecheck(expectedMessage, params, arguments);
+    typecheck(expectName, params, arguments);
 }
 
-const errorMessage = 'expectedMessage(name) name should be a String but received undefined.';
-
 describe('Config.expectedMessage', () => {
-    it(errorMessage, () => {
-        try {
+    it('should be', () => {
+        expect(() => {
             Config.setup({
                 expectedMessage: 'should be'
             });
 
-            expectedMessage();
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+            expectName();
+        }).toThrow('expectName(name) name should be a String but received undefined.');
     });
 
-    const errorMessage2 = 'expectedMessage(name) name expected a String but received undefined.';
-
-    it(errorMessage2, () => {
-        try {
+    it('reset', () => {
+        expect(() => {
             Config.reset();
 
-            expectedMessage();
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage2);
-        }
+            expectName();
+        }).toThrow('expectName(name) name expected a String but received undefined.');
     });
 });

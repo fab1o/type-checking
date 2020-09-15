@@ -1,46 +1,68 @@
 import { Types, typecheck } from '../src';
 
 describe('typecheck', () => {
-    it('match error message when no param is given', () => {
-        try {
-            typecheck();
+    it('typechecks sucessfully works with simple objects', () => {
+        expect(() => {
+            const params = {
+                name: Types.string,
+                isActive: Types.boolean
+            };
+            const data = {
+                name: 'name',
+                isActive: true
+            };
 
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe('typecheck(...) params expected an Object built with Types.');
-        }
+            typecheck(params, data);
+        }).not.toThrow();
+    });
+
+    it('typechecks sucessfully works with simple array', () => {
+        expect(() => {
+            const params = {
+                name: Types.string,
+                isActive: Types.boolean
+            };
+            const data = ['name', true];
+
+            typecheck(params, data);
+        }).not.toThrow();
+    });
+
+    it('typechecks sucessfully', () => {
+        expect(() => {
+            typecheck(
+                {
+                    b: Types.number
+                },
+                [1]
+            );
+        }).not.toThrow();
+    });
+
+    it('match error message when no param is given', () => {
+        expect(() => {
+            typecheck();
+        }).toThrow('typecheck(...) params expected an Object built with Types.');
     });
 
     it('match error message when empty params is given', () => {
-        try {
+        expect(() => {
             typecheck({});
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe('typecheck(...) params expected an Object built with Types.');
-        }
+        }).toThrow('typecheck(...) params expected an Object built with Types.');
     });
 
     it('match error message when input is given as null', () => {
-        try {
+        expect(() => {
             typecheck({ name: Types.string }, [null]);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe('{name} name expected a String but received null.');
-        }
+        }).toThrow('{name} name expected a String but received null.');
     });
 
     it('match error message when input is given as undefined', () => {
-        try {
+        expect(() => {
             typecheck({ name: Types.string }, undefined);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(
-                'typecheck(...) arguments expected an Array or an Object. Make sure you configure params and invoke typecheck correctly.'
-            );
-        }
+        }).toThrow(
+            'typecheck(...) arguments expected an Array or an Object. Make sure you invoke typecheck correctly.'
+        );
     });
 
     it('typecheck returns undefined', () => {
@@ -57,26 +79,48 @@ describe('typecheck', () => {
     class MyCustomError extends Error {}
 
     it('should throw MyCustomError on a simple typecheck', () => {
-        try {
+        expect(() => {
             typecheck({ a: Types.number }, [null], MyCustomError);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex).toBeInstanceOf(MyCustomError);
-        }
+        }).toThrow(MyCustomError);
     });
 
     it('should throw MyCustomError on a function', () => {
-        function checkA() {
-            typecheck(checkA, { options: Types.object() }, arguments, MyCustomError);
-        }
+        expect(() => {
+            function checkA() {
+                typecheck(checkA, { options: Types.object() }, arguments, MyCustomError);
+            }
 
-        try {
             checkA(null);
+        }).toThrow(MyCustomError);
+    });
 
-            expect.fail();
-        } catch (ex) {
-            expect(ex).toBeInstanceOf(MyCustomError);
-        }
+    it('should not fail when user input is an object', () => {
+        expect(() => {
+            typecheck(
+                {
+                    name: Types.string,
+                    year: Types.number,
+                    active: Types.boolean
+                },
+                {
+                    active: true,
+                    name: '',
+                    year: 2020
+                }
+            );
+        }).not.toThrow();
+    });
+
+    it('should not fail when user input is a user array of arguments', () => {
+        expect(() => {
+            typecheck(
+                {
+                    name: Types.string,
+                    year: Types.number,
+                    active: Types.boolean
+                },
+                ['', 2020, true]
+            );
+        }).not.toThrow();
     });
 });

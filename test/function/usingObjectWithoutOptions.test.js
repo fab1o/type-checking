@@ -10,30 +10,20 @@ function createStudentWithoutOptions(options) {
 }
 
 describe('function using object as argument for input', () => {
-    const errorMessage =
-        'typecheck(...) arguments expected an Array or an Object. Make sure you configure params and invoke typecheck correctly.';
-
-    it(errorMessage, () => {
-        try {
+    it('throw an error', () => {
+        expect(() => {
             createStudentWithoutOptions();
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow(
+            'typecheck(...) arguments expected an Array or an Object. Make sure you invoke typecheck correctly.'
+        );
     });
 
-    const errorMessage2 =
-        'typecheck(...) arguments expected an Array or an Object. Make sure you configure params and invoke typecheck correctly.';
-
-    it(errorMessage2, () => {
-        try {
+    it('throw an error with null', () => {
+        expect(() => {
             createStudentWithoutOptions(null);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage2);
-        }
+        }).toThrow(
+            'typecheck(...) arguments expected an Array or an Object. Make sure you invoke typecheck correctly.'
+        );
     });
 
     it('an Error is not thrown when passing valid data.', () => {

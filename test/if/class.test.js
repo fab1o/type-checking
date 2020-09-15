@@ -23,29 +23,17 @@ class Student {
 }
 
 describe('typecheck.if in a class', () => {
-    const errorMessage = 'Student() this is a custom error message.';
-
-    it(errorMessage, () => {
-        try {
+    it('throw an error for constructor', () => {
+        expect(() => {
             new Student(false);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow('Student() this is a custom error message.');
     });
 
-    const errorMethodMessage = 'Student.method() this is a custom error message.';
-
-    it(errorMethodMessage, () => {
-        try {
+    it('throw an error for method', () => {
+        expect(() => {
             const student = new Student(true);
 
             student.method();
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMethodMessage);
-        }
+        }).toThrow('Student.method() this is a custom error message.');
     });
 });

@@ -1,20 +1,27 @@
 import { Types, typecheck } from '../../src';
 
-const errorMessage = '{code} code expected a Number in the range 6 to 9 but received a Number: 1.';
-
 describe('Types.inRange', () => {
-    it(errorMessage, () => {
-        try {
+    it('throw an error', () => {
+        expect(() => {
             typecheck(
                 {
-                    code: Types.inRange(6, 9)
+                    code: Types.inRange(1, 3)
+                },
+                [0]
+            );
+        }).toThrow(
+            '{code} code expected a Number in the range 1 to 3 but received a Number: 0.'
+        );
+    });
+
+    it('not throw an error', () => {
+        expect(() => {
+            typecheck(
+                {
+                    code: Types.inRange(1, 3)
                 },
                 [1]
             );
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).not.toThrow();
     });
 });

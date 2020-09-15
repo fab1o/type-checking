@@ -1,49 +1,64 @@
 import { Types, typecheck } from '../../src';
 
-function createStudentWithOptions(options) {
+function createAccountWithOptions(options) {
     const params = {
         options: Types.object({
             name: Types.string,
-            year: Types.number
+            isActive: Types.boolean
         })
     };
 
-    typecheck(createStudentWithOptions, params, { options });
+    typecheck(createAccountWithOptions, params, { options });
+}
+
+function createAccount(name, isActive = false) {
+    const params = {
+        name: Types.string,
+        isActive: Types.boolean.optional
+    };
+
+    typecheck(createAccount, params, { name, isActive });
 }
 
 describe('function using object as argument for input', () => {
-    const errorMessage =
-        'createStudentWithOptions({ options }) options expected an Object with properties but received undefined.';
-
-    it(errorMessage, () => {
-        try {
-            createStudentWithOptions();
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
-    });
-
-    const errorMessage2 =
-        'createStudentWithOptions({ options }) options expected an Object with properties but received null.';
-
-    it(errorMessage2, () => {
-        try {
-            createStudentWithOptions(null);
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage2);
-        }
-    });
-
-    it('an Error is not thrown when passing valid data.', () => {
+    it('throws an Error on options', () => {
         expect(() => {
-            createStudentWithOptions({
+            createAccountWithOptions();
+        }).toThrow(
+            'createAccountWithOptions(options) options expected an Object with properties but received undefined.'
+        );
+    });
+
+    it('does not throw an Error on options.', () => {
+        expect(() => {
+            createAccountWithOptions({
                 name: '',
-                year: 2020
+                isActive: true
             });
+        }).not.toThrow();
+    });
+
+    it('throws an Error in inner param', () => {
+        expect(() => {
+            createAccountWithOptions({
+                name: null
+            });
+        }).toThrow(
+            'createAccountWithOptions({ name, isActive }) options.name expected a String but received null.'
+        );
+    });
+
+    it('throws an Error', () => {
+        expect(() => {
+            createAccount();
+        }).toThrow(
+            'createAccount(name, isActive) name expected a String but received undefined.'
+        );
+    });
+
+    it('does not throw an Error.', () => {
+        expect(() => {
+            createAccount('', true);
         }).not.toThrow();
     });
 });

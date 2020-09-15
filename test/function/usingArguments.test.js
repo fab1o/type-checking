@@ -7,18 +7,11 @@ function createStudent() {
 
     typecheck(createStudent, params, arguments);
 }
-
-const errorMessage = 'createStudent(name) name expected a String but received undefined.';
-
 describe('function using JavaScript arguments as argument for input', () => {
-    it(errorMessage, () => {
-        try {
+    it('throw an error', () => {
+        expect(() => {
             createStudent();
-
-            expect.fail();
-        } catch (ex) {
-            expect(ex.message).toBe(errorMessage);
-        }
+        }).toThrow('createStudent(name) name expected a String but received undefined.');
     });
 
     it('an Error is not thrown when passing correct data.', () => {
