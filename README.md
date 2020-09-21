@@ -6,7 +6,9 @@ Throws an `Error` when data fails to meet params configuration, ensuring data qu
 npm install @fab1o/type-checking
 ```
 
-**[Documentation]**(/Doc.md)
+## Documentation
+
+https://github.com/fab1o/type-checking/blob/master/docs/index.md
 
 ## Motivation
 
