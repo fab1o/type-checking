@@ -1,6 +1,6 @@
 import { Types, typecheck } from '../../src';
 
-function objectEnclosedByArray() {
+function objectEnclosedByArray(objs) {
     const params = {
         objs: Types.array.of.object({
             name: Types.string
@@ -14,9 +14,7 @@ describe('param enclosed', () => {
     it('throws an error', () => {
         expect(() => {
             objectEnclosedByArray([]);
-        }).toThrow(
-            'objectEnclosedByArray([{ name }]) objs.name expected a String but received undefined.'
-        );
+        }).not.toThrow();
     });
 
     it('throws an error with empty object', () => {

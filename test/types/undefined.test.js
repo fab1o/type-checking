@@ -1,6 +1,10 @@
 import { Types, typecheck } from '../../src';
 
-describe('Types.undefined', () => {
+describe.skip('Types.undefined', () => {
+    it('type name to be correct', () => {
+        expect(Types.undefined.typeName).toBe('undefined');
+    });
+
     it('throws no error', () => {
         expect(() => {
             typecheck(

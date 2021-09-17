@@ -1,7 +1,7 @@
 const baseRules = require('@fab1o/eslint-config-base/addon/prettier/config');
 
 const newRules = {
-    printWidth: 92
+    printWidth: 94
 };
 
 module.exports = Object.assign(baseRules, newRules);

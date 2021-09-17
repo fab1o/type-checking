@@ -13,9 +13,7 @@ describe('Types.object as options', () => {
                 typecheck(setName, params, arguments);
             }
             setName();
-        }).toThrow(
-            'setName(opts) opts expected an Object with properties but received undefined.'
-        );
+        }).toThrow('setName(opts) opts expected an Object but received undefined.');
     });
 
     it('throw an error for params in the options', () => {
@@ -33,9 +31,7 @@ describe('Types.object as options', () => {
             setName({
                 name: null
             });
-        }).toThrow(
-            'setName({ name, year }) opts.name expected a String but received null.'
-        );
+        }).toThrow('setName({ name, year }) opts.name expected a String but received null.');
     });
 
     it('throw an error when a param of the object is wrong', () => {

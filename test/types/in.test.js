@@ -9,6 +9,10 @@ const Colors = {
 const ColorsArray = ['red', 'yellow', 'green'];
 
 describe('Types.in', () => {
+    it('type name to be correct', () => {
+        expect(Types.in().typeName).toBe('in');
+    });
+
     it('throws an error', () => {
         expect(() => {
             typecheck(

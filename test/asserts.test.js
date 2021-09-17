@@ -1,86 +1,96 @@
 import { Asserts } from '../src/types/asserts';
 
 describe('Asserts', () => {
-    const simpleAssertModel = {
-        singular: expect.any(String),
-        plural: expect.any(String),
-        expectArgs: expect.any(Boolean),
-        validateCreator: expect.any(Function)
-    };
-
-    const stringifingAssertModel = {
-        singular: expect.any(String),
-        plural: expect.any(String),
-        expectArgs: expect.any(Boolean),
-        validateCreator: expect.any(Function),
-        stringify: expect.any(Function)
-    };
-
     const customAssertModel = {
+        assertName: expect.any(String),
         expectArgs: expect.any(Boolean),
         validateCreator: expect.any(Function)
     };
+
+    const simpleAssertModel = {
+        assertName: expect.any(String),
+        singular: expect.any(String),
+        plural: expect.any(String),
+        expectArgs: expect.any(Boolean),
+        validateCreator: expect.any(Function)
+    };
+
+    const customAsserts = ['custom', 'skip'];
 
     const simpleAsserts = [
         'array',
+        // 'arrayLike',
+        'arrayBufferView',
         'assigned',
-        'between',
+        // 'between',
         'boolean',
         'date',
         'dateString',
-        'emptyArray',
-        'emptyObject',
-        'emptyString',
-        'equal',
-        'even',
-        'float',
+        // 'emptyArray',
+        // 'emptyObject',
+        // 'emptyString',
+        // 'equal',
+        // 'even',
+        // 'float',
         'function',
-        'greater',
+        // 'greater',
         'greaterOrEqual',
-        'inRange',
+        // 'hasLength',
+        'in',
+        // 'inheritance',
+        // 'inRange',
+        // 'instance',
+        'instanceStrict',
         'integer',
-        'iterable',
-        'less',
-        'lessOrEqual',
-        'negative',
-        'nonEmptyArray',
+        // 'iterable',
+        'keyIn',
+        // 'less',
+        // 'lessOrEqual',
+        'like',
+        // 'match',
+        // 'negative',
+        // 'nonEmptyArray',
         'nonEmptyObject',
         'nonEmptyString',
-        'null',
+        // 'nan',
+        // 'null',
         'number',
         'object',
-        'odd',
+        // 'odd',
         'positive',
-        'string',
-        'thenable',
-        'undefined'
+        'string'
+        // 'thenable',
+        // 'undefined'
     ];
-    const customAsserts = ['custom', 'skip'];
-    const stringifingAsserts = [
-        'in',
-        'inheritance',
-        'instance',
-        'instanceStrict',
-        'keyIn',
-        'like',
-        'match'
-    ];
+
+    const qtyAsserts = Asserts.length;
+
+    it('Quantity of Asserts with extension and without extension to be correct', () => {
+        let qtyAssertsWithExtension = 0;
+        let qtyAssertsWithoutExtension = 0;
+
+        Asserts.forEach((assert) => {
+            if (assert.isExtensible) {
+                qtyAssertsWithExtension++;
+            } else {
+                qtyAssertsWithoutExtension++;
+            }
+        });
+
+        expect(qtyAsserts).toBe(qtyAssertsWithExtension + qtyAssertsWithoutExtension);
+    });
 
     it('expects asserts to have correct construct', () => {
-        const qtyAsserts = Object.keys(Asserts).length;
-
-        expect.assertions(qtyAsserts);
-
-        simpleAsserts.forEach((a) => {
-            expect(Asserts[a]).toMatchObject(simpleAssertModel);
+        simpleAsserts.forEach((name) => {
+            expect(Asserts.find((a) => a.assertName === name)).toMatchObject(
+                simpleAssertModel
+            );
         });
 
-        stringifingAsserts.forEach((a) => {
-            expect(Asserts[a]).toMatchObject(stringifingAssertModel);
-        });
-
-        customAsserts.forEach((a) => {
-            expect(Asserts[a]).toMatchObject(customAssertModel);
+        customAsserts.forEach((name) => {
+            expect(Asserts.find((a) => a.assertName === name)).toMatchObject(
+                customAssertModel
+            );
         });
     });
 });

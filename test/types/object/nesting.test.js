@@ -126,7 +126,7 @@ describe('Types.object - nesting', () => {
                 ]
             );
         }).toThrow(
-            '{outer, arrayOptions} arrayOptions expected an Array of objects with properties but received an Object: {year:2020, name:""}.'
+            '{outer, arrayOptions} arrayOptions expected an Array of objects but received an Object: {year:2020, name:""}.'
         );
     });
 

@@ -15,7 +15,7 @@ https://github.com/fab1o/type-checking/blob/master/docs/index.md
 1. Simplification: It makes type-checking clean, declarative, easy to read and maintain;
 2. Performance: Avoids creating the error message before the assertion fails in most cases;
 3. Configurable: Throw your own Error object, and customize the error messages to your liking;
-4. Featureful: Array of types, Optional, Nullable and Undefinable types, Custom types and User-defined types;
+4. Featureful: Array of types, Optional, Nullable, Undefinable and Logging types, Custom types and User-defined types;
 5. Smart error messages enable easier troubleshooting:
     - Dynamic function signature;
     - Base class parameters indicator;

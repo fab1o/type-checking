@@ -1,54 +1,47 @@
 import Check from '@fab1o/check-types';
 
+import { checkValue } from './util/checkValue';
 import { extendValidateCreator } from './extendValidateCreator';
+import { logValidateCreator } from './logValidateCreator';
 
 /**
- * @typedef {Object} Options
- * @property {*} value User input value for the parameter in question.
- * @property {TypeChecking.MessageBuilder.MessageBuilder} messageBuilder MessageBuilder object.
- * @property {Array|Object} input All user input.
- * @property {Error} ErrorType The Error type to throw.
- *
- * @param {TypeChecking.Type} type Type to create a validator for.
- * @param {Array<*>} expectedArgs What values are expected for this type.
- * @desc Creates a validator that does not skip type checking.
+ * @param {TypeChecking.Type} type - Type to create a validator for.
+// * @param {Array<*>} [firstTypeExpectedArgs] - Expected values for the first type of the combinatory type.
+ * @param {Array<*>} [expectedArgs] - Expected values for this type.
+ * @desc Creates a validator for any type.
  * @throws {Error} When type checking fails.
  * @returns {Function} Validator function for any type.
  */
+// export function genericValidateCreator(type, firstTypeExpectedArgs, ...expectedArgs) {
 export function genericValidateCreator(type, ...expectedArgs) {
-    const { name, isArray } = type;
+    const { name: typeName, isExtensible } = type;
 
     /**
-     * @param {Options} options
+     * @param {*} value - User input value for the param in question.
+     * @param {TypeChecking.TypeChecker} typeChecker - TypeChecker object.
+     * @param {String} [loggingFunc] - The function name for the logging: log, warn, info, error.
      */
-    function validate(options) {
-        const { value, typeChecker } = options || {};
-
+    function validate(value, typeChecker, loggingFunc) {
         // typeChecker may not always be assigned here if dev messed up
         if (Check.not.assigned(typeChecker)) {
-            throw SyntaxError(`Types: expected Types.${name} not Types.${name}()`);
+            throw TypeError(
+                `typecheck(...) params expected Types.${typeName} not Types.${typeName}()`
+            );
         }
 
-        const { messageBuilder, ErrorType } = typeChecker;
-
-        let isOk = false;
-
-        if (isArray) {
-            isOk = Check.array.of[name](value, ...expectedArgs);
-        } else {
-            isOk = Check[name](value, ...expectedArgs);
-        }
-
-        if (isOk === false) {
-            const errorMessage = messageBuilder.buildMessage({
-                value,
-                expectedArgs,
-                type
-            });
-
-            throw new ErrorType(errorMessage);
-        }
+        checkValue(
+            value,
+            type,
+            typeChecker,
+            loggingFunc,
+            // firstTypeExpectedArgs,
+            ...expectedArgs
+        );
     }
 
-    return extendValidateCreator(validate, name);
+    if (isExtensible) {
+        return extendValidateCreator(validate, type); // , ...expectedArgs);
+    }
+
+    return logValidateCreator(validate, { typeName });
 }

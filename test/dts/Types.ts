@@ -1,12 +1,24 @@
 import { Types, typecheck } from '../../index';
 
+const Enum = { a: 'a' };
+
 class AccountManager {
     constructor(...args) {
         const params = {
+            arr1: Types.array,
+            assign: Types.assigned.info,
             name: Types.string,
             code: Types.in({}),
             obj: Types.object(),
-            obj2: Types.nonEmptyObject
+            obj2: Types.nonEmptyObject,
+            str: Types.string.optional.log,
+            enum: Types.in(Enum).or.nonEmptyString,
+            skip: Types.skip.log,
+            num: Types.integer.and.positive,
+            nil: Types.null.log,
+            o: Types.instanceStrict(Object).or.object({}),
+            buffer: Types.arrayBufferView.or.nonEmptyString,
+            custom: Types.custom(() => true).warn
         };
 
         typecheck(this, params, args);
@@ -28,7 +40,7 @@ class Account {
         const params = {
             x: Types.array.of.date,
             y: Types.even,
-            z: Types.number.undefinable,
+            z: Types.number.optional,
             f: Types.inheritance(Account)
         };
 

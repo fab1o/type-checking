@@ -1,6 +1,10 @@
 import { Types, typecheck } from '../../src';
 
-describe('Types.inRange', () => {
+describe.skip('Types.inRange', () => {
+    it('type name to be correct', () => {
+        expect(Types.inRange().typeName).toBe('inRange');
+    });
+
     it('throw an error', () => {
         expect(() => {
             typecheck(

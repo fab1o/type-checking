@@ -23,7 +23,7 @@ class A {
 }
 
 describe('obfuscated function', () => {
-    Config.nameMethodPriority = Config.NameMethod.toString;
+    // Config.nameMethodPriority = Config.NameMethod.toString;
 
     it('throw an error', () => {
         expect(() => {

@@ -2,7 +2,11 @@ import { Config } from '../../src';
 
 import Child from '../class/relationship/method/child';
 
-describe('Config.etceteraOn', () => {
+describe.skip('Config.etceteraOn', () => {
+    afterAll(() => {
+        Config.reset();
+    });
+
     it('false', () => {
         expect(() => {
             Config.setup({

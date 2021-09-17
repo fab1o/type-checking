@@ -1,6 +1,10 @@
 import { Types, typecheck } from '../../src';
 
-describe('Types.wrong', () => {
+describe.skip('Types.wrong', () => {
+    it('type name to be correct', () => {
+        expect(Types.wrong).toBeUndefined();
+    });
+
     it('throws error because Types.wrong does not exist', () => {
         expect(() => {
             typecheck(
@@ -42,7 +46,7 @@ describe('Types.wrong', () => {
                 },
                 []
             );
-        }).toThrow('Types: expected Types.string not Types.string()');
+        }).toThrow('typecheck(...) params expected Types.string not Types.string()');
     });
 
     it('throws error because Types.dateString({}) does not exist', () => {
@@ -53,10 +57,10 @@ describe('Types.wrong', () => {
                 },
                 []
             );
-        }).toThrow('Types: expected Types.dateString not Types.dateString()');
+        }).toThrow('typecheck(...) params expected Types.dateString not Types.dateString()');
     });
 
-    it('throws error because Types.wrong inside an object does not exist', () => {
+    it('throws error because wrong param is undefined, Types.wrong does not exist', () => {
         expect(() => {
             typecheck(
                 {
@@ -64,12 +68,40 @@ describe('Types.wrong', () => {
                         wrong: Types.wrong
                     })
                 },
-                [
-                    {
-                        something: true
-                    }
-                ]
+                [{}]
             );
-        }).toThrow('Types: opts.wrong expected a valid type from Types.');
+        }).toThrow(
+            'typecheck(...) param opts.wrong expected a valid type of Types but received undefined.'
+        );
+    });
+
+    it('throws error because wrong param is null and input is {}', () => {
+        expect(() => {
+            typecheck(
+                {
+                    options: Types.object({
+                        wrong: null
+                    })
+                },
+                [{}]
+            );
+        }).toThrow(
+            'typecheck(...) param options.wrong expected a valid type of Types but received null.'
+        );
+    });
+
+    it('throws error because wrong param is {} and input is {}', () => {
+        expect(() => {
+            typecheck(
+                {
+                    options: Types.object({
+                        wrong: {}
+                    })
+                },
+                [{}]
+            );
+        }).toThrow(
+            'typecheck(...) param options.wrong expected a valid type of Types but received an Object: {}.'
+        );
     });
 });

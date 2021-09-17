@@ -3,14 +3,14 @@ import Check from '@fab1o/check-types';
 /**
  * @enum {String}
  * @typedef {Object} UserInputType
- * @property {String} object 'object' - An Object.
- * @property {String} arguments 'arguments' - JavaScript arguments.
- * @property {String} none 'none' - Neither Object nor arguments.
+ * @property {Number} object 'object' - An Object.
+ * @property {Number} arguments 'arguments' - JavaScript arguments.
+ * @property {Number} none 'none' - Neither Object nor arguments.
  */
 export const UserInputType = {
-    object: 'object',
-    arguments: 'arguments',
-    none: 'none'
+    object: 1,
+    arguments: 2,
+    none: 0
 };
 
 /**

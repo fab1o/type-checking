@@ -1,5 +1,5 @@
-import { Config } from '../../src';
-import { getTypeName } from '../../src/util';
+// import { Config } from '../../src';
+import { getTypeName, getTypeToString } from '../../src/util';
 
 describe('getTypeName', () => {
     it('function definition with native name', () => {
@@ -64,12 +64,11 @@ describe('getTypeName', () => {
             }
         }
 
-        Config.nameMethodPriority = Config.NameMethod.toString;
+        // Config.nameMethodPriority = Config.NameMethod.toString;
 
-        const className = getTypeName(Account);
+        const className = getTypeToString(Account);
 
         expect(className).toBe(Account.prototype.toString());
-        expect(className).toBe('This.is.Account');
 
         const account = new Account();
         const instanceName = getTypeName(account);
@@ -87,7 +86,6 @@ describe('getTypeName', () => {
         const value = getTypeName(Account);
 
         expect(value).toBe(Account.name);
-        expect(value).toBe('MyCustomAccount');
     });
 
     it('class with both custom (overridden) toString and (edited) name', () => {
@@ -103,28 +101,26 @@ describe('getTypeName', () => {
 
         let className, account, instanceName;
 
-        Config.nameMethodPriority = Config.NameMethod.toString;
+        // Config.nameMethodPriority = Config.NameMethod.toString;
 
-        className = getTypeName(Account);
+        className = getTypeToString(Account);
 
         // instance toString() has priority over static name as per Config set
         expect(className).toBe(Account.prototype.toString());
-        expect(className).toBe('This.is.Account');
 
         account = new Account();
-        instanceName = getTypeName(account);
+        instanceName = getTypeToString(account);
 
         expect(instanceName).toBe(account.toString());
 
         // now, let's invert the priority in the Config to static name
-        Config.nameMethodPriority = Config.NameMethod.name;
+        // Config.nameMethodPriority = Config.NameMethod.name;
 
         // and repeat the tests:
 
         className = getTypeName(Account);
 
         expect(className).toBe(Account.name);
-        expect(className).toBe('MyCustomAccount');
 
         account = new Account();
         instanceName = getTypeName(account);
@@ -136,22 +132,22 @@ describe('getTypeName', () => {
         account.name = null;
 
         instanceName = getTypeName(account);
-        expect(instanceName).toBe('MyCustomAccount');
+        expect(instanceName).toBe(Account.name);
 
         delete account.name;
 
         instanceName = getTypeName(account);
-        expect(instanceName).toBe('MyCustomAccount');
+        expect(instanceName).toBe(Account.name);
 
         // tampered classes
 
         delete Account.name;
 
         className = getTypeName(Account);
-        expect(className).toBe('This.is.Account');
+        expect(className).toBe(Account.prototype.toString());
 
         instanceName = getTypeName(account);
-        expect(instanceName).toBe('This.is.Account');
+        expect(instanceName).toBe(Account.prototype.toString());
     });
 
     it('simple objects are not instances of a class, so names are simply "Object"', () => {

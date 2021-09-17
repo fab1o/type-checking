@@ -1,9 +1,13 @@
 import { Config, Types, typecheck } from '../../src';
 
-class MyError extends Error {}
-
 describe('Config.ErrorType', () => {
-    it('config.Error is MyError after configuring typecheck.', () => {
+    class MyError extends Error {}
+
+    it('Config.DefaultError is TypeError.', () => {
+        expect(Config.DefaultError).toBe(TypeError);
+    });
+
+    it('Config.Error is MyError after configuring typecheck.', () => {
         expect(() => {
             Config.setup({
                 ErrorType: MyError
@@ -15,17 +19,17 @@ describe('Config.ErrorType', () => {
         expect(Config.ErrorType).toBe(MyError);
     });
 
-    it('config.Error is still MyError after typecheck is called for the second time.', () => {
+    it('Config.Error is still MyError after typecheck is called for the second time.', () => {
         expect(() => {
             typecheck({ a: Types.number }, [null]);
         }).toThrow(MyError);
     });
 
-    it('config.Error is SyntaxError after a reset.', () => {
+    it('Config.Error is the default error which should be TypeError after a reset.', () => {
         expect(() => {
             Config.reset();
 
             typecheck({ a: Types.number }, [null]);
-        }).toThrow(SyntaxError);
+        }).toThrow(Config.DefaultError);
     });
 });
