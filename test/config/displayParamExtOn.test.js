@@ -1,14 +1,14 @@
 import { Config, Types, typecheck } from '../../src';
 
-function func() {
-    const params = {
-        name: Types.string.optional
-    };
+describe.skip('Config.displayParamExt', () => {
+    function func() {
+        const params = {
+            name: Types.string.optional
+        };
 
-    typecheck(func, params, arguments);
-}
+        typecheck(func, params, arguments);
+    }
 
-describe('Config.displayParamExt', () => {
     it('false', () => {
         expect(() => {
             Config.setup({

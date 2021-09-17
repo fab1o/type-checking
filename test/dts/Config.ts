@@ -1,14 +1,19 @@
 import { Config } from '../../index';
 
-Config.NameMethod;
+Config.nameMethodPriority = Config.NameMethod.name;
 
 Config.setup({
     ErrorType: Error,
-    nameMethodPriority: Config.NameMethod.name,
-    parents: true
+    nameMethodPriority: Config.NameMethod.toString
 });
 
+Config.loggerMethodForOrType = Config.LoggerMethod.info;
+
+Config.loggerMethodForOrType = null;
+
 Config.receivedMessage = '';
+
+Config.parentsOn = true;
 
 Config.resetErrorType();
 Config.reset();

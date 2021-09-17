@@ -1,6 +1,8 @@
 import Check from '@fab1o/check-types';
 
-import { Config } from '../config';
+// ***
+// import { Config } from '../config';
+// import { verifyValidateFunction } from '../util';
 
 import { Param } from './param';
 
@@ -16,7 +18,7 @@ export class Params {
      * @param {Boolean} [options.displayBrackets=false] - Whether or not to display brackets "{ }".
      */
     constructor(objParams, options) {
-        const { parent, displayEtcetera = false, displayBrackets = false } = options || {};
+        const { parent, displayEtcetera = false, displayBrackets = false } = options ?? {};
 
         if (Check.object(objParams)) {
             this.params = Params.toArray(objParams, parent);
@@ -27,6 +29,7 @@ export class Params {
         this.displayBrackets = displayBrackets;
         this.displayEtcetera = displayEtcetera;
 
+        // this is being set on TypeCheckerAtLeastOne class to prevent displaying the brackets when it should not
         this.atLeastOne = false;
     }
 
@@ -87,21 +90,18 @@ export class Params {
         return Object.keys(objParams).map((name) => {
             const paramValidate = objParams[name];
 
-            if (!paramValidate) {
-                const par = parent != null ? `${parent.name}.` : '';
+            // ***
+            // verifyValidateFunction(paramValidate, { parent, name });
+            // const { isNullable, isOptional, isUndefinable } = paramValidate;
 
-                throw SyntaxError(`Types: ${par}${name} expected a valid type from Types.`);
-            }
-
-            const { typeName, isNullable, isOptional, isUndefinable } = paramValidate;
+            const { isOptional } = paramValidate;
 
             return new Param({
                 name,
                 parent,
-                isNullable,
-                isOptional,
-                isUndefinable,
-                typeName
+                // isNullable, ***
+                isOptional
+                // , isUndefinable ***
             });
         });
     }
@@ -132,9 +132,11 @@ export class Params {
         }
 
         // params is an "options" object
-        const parentParams = Config.etceteraOn && this.displayEtcetera ? ', ...' : '';
+        // ***
+        // const parentParams = Config.etceteraOn && this.displayEtcetera ? ', ...' : '';
+        const parentParams = this.displayEtcetera ? ', ...' : '';
 
-        // helps identify that an object is enclosed by an array
+        // helps identify that an object is enclosed by an array (defined in MessageBuilder)
         const openBracket = param.isArray ? '[' : '';
         const closBracket = param.isArray ? ']' : '';
 

@@ -1,65 +1,87 @@
-import Check from '@fab1o/check-types';
+// ***
+// import Check from '@fab1o/check-types';
 
-import { Type } from './types/type';
-import { Types } from './types/types';
+// import { Types, Type } from './types';
+// import { createCustomValidator, getArgumentValueName } from './util';
 
-/**
- * @param {String} name Type name.
- * @param {Function} validator Custom function that validates input, must return boolean.
- * @param {Object} [options]
- * @param {String} [options.singular] Name in singular.
- * @param {String} [options.plural] Name in plural.
- * @param {Boolean} [options.expectArgs=false] Whether type expects an argument or not.
- * @param {Boolean} [options.autoDisplayArgs=true] Whether or not automatically display arguments.
- * @param {Function} [options.stringify=getArgumentValueName] A function to replace the default getArgumentValueName function for the arguments of this type.
- * @desc Creates a user defined type and adds it to Types object. A shortened syntax for Types.custom.
- * @example
- * const isBlueberry = (a) => String(a) === 'blueberry';
- *
- * addType('blueberry', isBlueberry, {
- *   singular: 'a Blueberry',
- *   plural: 'blueberries'
- * });
- * const params = {
- *    blueberry: Types.blueberry,
- *    maybeBlueberry: Types.blueberry.optional
- * };
- */
-export function addType(name, validator, options = {}) {
-    const signature = 'addType(name, validator, options)';
+// /**
+//  * @param {String} name - Type name.
+//  * @param {Function} validator - Custom function that validates input, must return boolean.
+//  * @param {Object} [options]
+//  * @param {String} [options.assert=name] - Type assert.
+//  * @param {String} [options.singular=name] - Name in singular.
+//  * @param {String} [options.plural=name+'s'] - Name in plural.
+//  * @param {Boolean} [options.expectArgs=false] - Whether type expects an argument or not.
+//  * @param {Boolean} [options.autoDisplayArgs=true] - Whether or not automatically display arguments.
+//  * @param {Function} [options.stringify=getArgumentValueName] - A function to replace the default getArgumentValueName function for the arguments of this type.
+//  * @desc Creates a user defined type and adds it to Types object.
+//  * @throws {TypeError} When a parameter is invalid.
+//  * @example
+//  * const isBlueberry = (a) => String(a) === 'blueberry';
+//  *
+//  * addType('blueberry', isBlueberry, {
+//  *   singular: 'a Blueberry',
+//  *   plural: 'blueberries'
+//  * });
+//  *
+//  * const params = {
+//  *    blueberry: Types.blueberry,
+//  *    blueberries: Types.array.of.blueberry,
+//  *    maybeBlueberry: Types.blueberry.optional,
+//  *    maybeBlueberries: Types.array.of.blueberry.optional
+//  * };
+//  */
+// export function addType(name, validator, options = {}) {
+//     const signature = 'addType(name, validator, options)';
 
-    if (Check.assigned(Types[name])) {
-        throw SyntaxError(
-            `${signature} name expected a Type name that does not already exist in Types.`
-        );
-    }
+//     if (Check.not.nonEmptyString(name)) {
+//         throw TypeError(`${signature} name expected a non-empty String.`);
+//     }
 
-    if (Check.not.function(validator)) {
-        throw SyntaxError(
-            `${signature} validator expected a Function that returns boolean.`
-        );
-    }
+//     if (Check.assigned(Types[name])) {
+//         throw TypeError(
+//             `${signature} name expected a type name that does not already exist in Types.`
+//         );
+//     }
 
-    if (Check.not.object(options)) {
-        throw SyntaxError(`${signature} [options] expected an Object.`);
-    }
+//     if (Check.not.function(validator)) {
+//         throw TypeError(`${signature} validator expected a Function that returns boolean.`);
+//     }
 
-    const type = new Type(name, options);
+//     if (Check.not.object(options)) {
+//         throw TypeError(`${signature} options expected an Object or undefined.`);
+//     }
 
-    Object.defineProperty(Types, name, {
-        value: type.createCustomValidator(validator, options.singular),
-        writable: false,
-        configurable: false
-    });
+//     const stringify = options.stringify ?? getArgumentValueName;
+//     const expectArgs = options.expectArgs ?? false;
+//     const autoDisplayArgs = options.autoDisplayArgs ?? true;
 
-    const arrayOfType = new Type(name, {
-        ...options,
-        isArray: true
-    });
+//     const type = new Type(name, {
+//         ...options,
+//         stringify,
+//         expectArgs,
+//         autoDisplayArgs
+//     });
 
-    Object.defineProperty(Types.array.of, name, {
-        value: arrayOfType.createCustomValidator(validator, options.plural),
-        writable: false,
-        configurable: false
-    });
-}
+//     Types[name] = createCustomValidator(type, validator, options.singular);
+
+//     const arrayOfType = new Type(name, {
+//         ...options,
+//         // arrayOfType: 'array'
+//         isArray: true
+//     });
+
+//     Types.array.of[name] = createCustomValidator(arrayOfType, validator, options.plural);
+
+//     // ***
+//     // const nonEmptyArrayOfType = new Type(name, {
+//     //     ...options,
+//     //     arrayOfType: 'nonEmptyArray'
+//     // });
+//     //
+//     // Types.nonEmptyArray.of[name] = createCustomValidator(
+//     //     nonEmptyArrayOfType,
+//     //     validator,
+//     //     options.plural
+//     // );
+// }

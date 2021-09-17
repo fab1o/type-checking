@@ -1,14 +1,18 @@
 import { Config, Types, typecheck } from '../../src';
 
-function received() {
-    const params = {
-        name: Types.string
-    };
+describe.skip('Config.receivedMessage', () => {
+    function received() {
+        const params = {
+            name: Types.string
+        };
 
-    typecheck(received, params, arguments);
-}
+        typecheck(received, params, arguments);
+    }
 
-describe('Config.receivedMessage', () => {
+    afterAll(() => {
+        Config.reset();
+    });
+
     it('but was given', () => {
         expect(() => {
             Config.setup({

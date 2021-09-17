@@ -1,7 +1,14 @@
 module.exports = {
-    extends: ['@fab1o/eslint-config-babel/all'],
-    rules: {
-        'import/no-unused-modules': 0,
-        'no-nested-ternary': 0
-    }
+    env: {
+        node: true
+    },
+    extends: [
+        '@fab1o/eslint-config-babel',
+
+        '@fab1o/eslint-config-base/addon/jest',
+        '@fab1o/eslint-config-base/addon/jsdoc',
+        '@fab1o/eslint-config-base/addon/disable',
+
+        '@fab1o/eslint-config-babel/addon/prettier'
+    ]
 };

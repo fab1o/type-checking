@@ -1,6 +1,10 @@
 import { Types, typecheck } from '../../src';
 
-describe('Types.null', () => {
+describe.skip('Types.null', () => {
+    it('type name to be correct', () => {
+        expect(Types.null.typeName).toBe('null');
+    });
+
     it('throws no error', () => {
         expect(() => {
             typecheck(

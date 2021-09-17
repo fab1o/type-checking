@@ -1,15 +1,13 @@
-import { Config } from '../../config';
 import { MethodSignature, MessageBuilder } from '../../messageBuilder';
 import { getUserInputType, UserInputType } from '../../util';
 
 import { composeOverloading } from './composeOverloading';
-import { isObjectTypes } from './isObjectTypes';
 
 /**
  * @param {Array} args - Arguments of {@link typecheck}.
  * @param {String} [methodName] - Method name.
  * @desc Validates the given arguments.
- * @throws {SyntaxError} When arguments are not valid, user failed to call {@link typecheck} correctly.
+ * @throws {TypeError} When arguments are not valid, user failed to call {@link typecheck} correctly.
  * @returns {Object} An objct with input, params, ErrorType and {@link MessageBuilder}.
  */
 export function validateArguments(args, methodName) {
@@ -19,17 +17,18 @@ export function validateArguments(args, methodName) {
         method,
         c: objParams,
         d: input,
-        ErrorType = Config.ErrorType
+        ErrorType
     } = composeOverloading(args, methodName);
 
-    if (isObjectTypes(objParams) === false) {
-        throw SyntaxError(`${signature} params expected an Object built with Types.`);
-    }
+    // ***
+    // if (isObjectTypes(objParams) === false) {
+    //     throw TypeError(`${signature} params expected an Object built with Types.`);
+    // }
 
     const inputType = getUserInputType(input);
 
     if (inputType === UserInputType.none) {
-        throw SyntaxError(
+        throw TypeError(
             `${signature} arguments expected an Array or an Object. Make sure you invoke typecheck correctly.`
         );
     }
@@ -47,6 +46,7 @@ export function validateArguments(args, methodName) {
     const messageBuilder = new MessageBuilder(methodSignature);
 
     return {
+        signature,
         messageBuilder,
         objParams,
         input,

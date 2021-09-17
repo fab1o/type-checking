@@ -1,3 +1,6 @@
+// ***
+// import { Config } from '../config';
+
 /**
  * Reflection library - getTypeName
  *
@@ -9,8 +12,6 @@
 
 import Check from '@fab1o/check-types';
 
-import { Config } from '../config';
-
 // #region private
 /**
  * MAX_LEN = Arbitrary value to indicate max length for a type name via toString()
@@ -20,16 +21,7 @@ import { Config } from '../config';
  * NOT_OVERRIDDEN = Indicates toString() is from parent Object
  */
 const MAX_LEN = 128;
-const NOT_OVERRIDDEN = '[object Object]';
-
-/**
- * @param {Function|Object} type Type.
- * @desc Gets the type name from toString first, then use name property.
- * @returns {String}
- */
-function toString(type) {
-    return Check.function(type) ? funcToString(type) : objToString(type);
-}
+const NOT_OVERRIDDEN = '[object ';
 
 /**
  * @param {Function|Object} type Type.
@@ -52,9 +44,14 @@ function funcToString(type) {
         typeName = type.prototype.toString() || '';
     }
 
-    if (typeName === '' || typeName === NOT_OVERRIDDEN || typeName.length > MAX_LEN) {
+    if (
+        typeName === '' ||
+        typeName.indexOf(NOT_OVERRIDDEN) !== -1 ||
+        typeName.length > MAX_LEN
+    ) {
         typeName = type.name;
     }
+    // typeName is empty if the function is an anonymous function
 
     return typeName || '';
 }
@@ -76,7 +73,11 @@ function funcName(type) {
 function objToString(type) {
     let typeName = type.toString() || '';
 
-    if (typeName === '' || typeName === NOT_OVERRIDDEN || typeName.length > MAX_LEN) {
+    if (
+        typeName === '' ||
+        typeName.indexOf(NOT_OVERRIDDEN) !== -1 ||
+        typeName.length > MAX_LEN
+    ) {
         // use its own constructor name if exists
         if (Check.function(type.constructor)) {
             typeName = type.constructor.name;
@@ -125,9 +126,10 @@ export function getTypeName(type, defaultVal) {
         return type;
     }
 
-    if (Config.nameMethodPriority === Config.NameMethod.toString) {
-        return toString(type);
-    }
+    // ***
+    // if (Config.nameMethodPriority === Config.NameMethod.toString) {
+    //     return getTypeToString(type, defaultVal);
+    // }
 
     return name(type);
 }

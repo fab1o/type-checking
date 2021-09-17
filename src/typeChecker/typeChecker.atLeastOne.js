@@ -14,10 +14,10 @@ export class TypeCheckerAtLeastOne extends TypeChecker {
         this.messageBuilder.methodSignature.params.atLeastOne = true;
     }
 
-    execute(options) {
+    execute(options = {}) {
         super.execute(options);
 
-        const { input = this.input, objParams = this.objParams } = options || {};
+        const { input = this.input, objParams = this.objParams } = options;
 
         let isProvided = false;
 

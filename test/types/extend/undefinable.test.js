@@ -1,6 +1,6 @@
 import { Types, typecheck } from '../../../src';
 
-describe('Types.x.undefinable', () => {
+describe.skip('Types.x.undefinable', () => {
     it('does throw error when passing null to a undefinable param.', () => {
         expect(() => {
             typecheck(
@@ -9,7 +9,7 @@ describe('Types.x.undefinable', () => {
                 },
                 [null]
             );
-        }).toThrow(SyntaxError);
+        }).toThrow(TypeError);
     });
 
     it('does not throw error when passing undefined to a undefinable param.', () => {

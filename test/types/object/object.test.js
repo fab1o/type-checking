@@ -23,6 +23,17 @@ describe('Types.object', () => {
         }).not.toThrow();
     });
 
+    it.skip('throw an error for wrong setup', () => {
+        expect(() => {
+            typecheck(
+                {
+                    obj: Types.object
+                },
+                [{}]
+            );
+        }).toThrow('typecheck(...) params expected an Object built with Types.');
+    });
+
     it('an Error is not thrown when object is optional.', () => {
         expect(() => {
             typecheck(
@@ -34,7 +45,7 @@ describe('Types.object', () => {
         }).not.toThrow();
     });
 
-    it('an Error is not thrown when object is nullable.', () => {
+    it.skip('an Error is not thrown when object is nullable.', () => {
         expect(() => {
             typecheck(
                 {

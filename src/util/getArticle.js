@@ -1,3 +1,29 @@
+import Check from '@fab1o/check-types';
+
+/**
+ *
+ * @param {Object} value An Object.
+ * @returns {String} Gets the correct article for a given type of Object.
+ */
+function getArticleOfObject(value) {
+    if (Check.not.function(value.constructor)) {
+        return '';
+    }
+
+    const firstLetter = value.constructor.name.substr(0, 1).toLowerCase();
+
+    switch (firstLetter) {
+        case 'a':
+        case 'e':
+        case 'i':
+        case 'o':
+        case 'u':
+            return 'an ';
+        default:
+            return 'a ';
+    }
+}
+
 /**
  *
  * @param {*} value Any value.
@@ -11,13 +37,7 @@ export function getArticle(value) {
         case 'boolean':
             return 'a ';
         case 'object':
-            switch (value.constructor.name) {
-                case 'Array':
-                case 'Object':
-                    return 'an ';
-                default:
-                    return 'a ';
-            }
+            return getArticleOfObject(value);
         default:
             return '';
     }

@@ -1,6 +1,6 @@
 import Check from '@fab1o/check-types';
 
-import { getTypeName, hasSuperclass } from '../util';
+import { getTypeToString, hasSuperclass } from '../util';
 
 import { Params } from './params';
 
@@ -13,13 +13,17 @@ export class MethodSignature {
      * @param {Object|String} [options.object=null] - Class instance or object.
      * @param {Function|String} [options.method=null] - Method of the class or a function.
      * @param {Object<TypeChecking.Type>} [options.objParams=null] - Object built with Types.
-     * @param {Boolean} [options.displayBrackets=false] - Whether or not to display brackets { }.
-     *
+     * @param {Boolean} [options.displayBrackets=false] - Whether or not to display brackets "{ }" for an object input.
      */
     constructor(options) {
-        const { object = null, method = null, objParams = null, displayBrackets } = options;
+        const {
+            object = null,
+            method = null,
+            objParams = null,
+            displayBrackets = false
+        } = options;
 
-        this.name = { object, method };
+        this.setName(object, method);
 
         // Whether or not it should add three dots to the list of param names to represent that it inherits more params.
         const displayEtcetera = hasSuperclass(object);
@@ -31,14 +35,15 @@ export class MethodSignature {
     }
 
     /**
+     * @param {Object|String} [object=null] - Class instance or object.
+     * @param {Function|String} [method=null] - Method of the class or a function.
      * @desc Sets the method signature name.
-     * @param {Object} opt
-     * @param {Object|String} [opt.object=null] - Class instance or object.
-     * @param {Function|String} [opt.method=null] - Method of the class or a function.
      */
-    set name(opt) {
-        const objectName = getTypeName(opt.object, '');
-        const methodName = getTypeName(opt.method, '');
+    setName(object, method) {
+        // const objectName = getTypeName(object, '');
+        // const methodName = getTypeName(method, '');
+        const objectName = getTypeToString(object, '');
+        const methodName = getTypeToString(method, '');
 
         let dot;
 
@@ -81,14 +86,14 @@ export class MethodSignature {
     }
 
     /**
-     * @param {String} name Name of param.
+     * @param {String} name - Name of param.
      * @param {TypeChecking.MessageBuilder.Param} [parent=null] - The parent param.
-     * @param {TypeChecking.MessageBuilder.Params} [params=parent?.params || this.params] - Collection of parameters.
+     * @param {TypeChecking.MessageBuilder.Params} [params=parent?.params??this.params] - Collection of parameters.
      * @desc Gets a param from a list of parameters.
      * @throws {ReferenceError} Internal failure.
      * @returns {TypeChecking.MessageBuilder.Param} The param found in the given params list.
      */
-    findParam(name, parent = null, params = parent?.params || this.params) {
+    findParam(name, parent = null, params = parent?.params ?? this.params) {
         let param = null;
 
         for (let i = 0; i < params.length; i++) {

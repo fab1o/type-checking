@@ -1,15 +1,36 @@
 import { Types, typecheck } from '../../src';
 
-function addAccount() {
-    const innerParams = {
-        name: Types.string.optional,
-        year: Types.number.optional
-    };
-
-    typecheck.atLeastOne(addAccount, innerParams, arguments);
-}
-
 describe('typecheck.atLeastOne with Options object', () => {
+    function addAccount() {
+        const params = {
+            name: Types.string.optional,
+            year: Types.number.optional
+        };
+
+        typecheck.atLeastOne(addAccount, params, arguments);
+    }
+
+    function addPerson(opts) {
+        const params = {
+            opts: Types.object({
+                name: Types.string.optional,
+                year: Types.number.optional,
+                opts: Types.object({
+                    name: Types.string.optional,
+                    year: Types.number.optional
+                })
+            })
+        };
+
+        typecheck.atLeastOne(addPerson, params, arguments);
+    }
+
+    it('throws an error for no argument', () => {
+        expect(() => {
+            addAccount();
+        }).toThrow('addAccount(name, year) at least one parameter must be provided.');
+    });
+
     it('throws an error', () => {
         expect(() => {
             addAccount({
@@ -39,6 +60,17 @@ describe('typecheck.atLeastOne with Options object', () => {
             addAccount(false);
         }).toThrow(
             'addAccount(name, year) name expected a String or null or undefined but received a Boolean: false.'
+        );
+    });
+
+    it('throws an error for options', () => {
+        expect(() => {
+            addPerson({
+                name: 'name',
+                opts: {}
+            });
+        }).toThrow(
+            'addPerson({ name, year, { name, year } }) at least one parameter must be provided.'
         );
     });
 });

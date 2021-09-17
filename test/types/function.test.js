@@ -1,6 +1,10 @@
 import { Types, typecheck } from '../../src';
 
 describe('Types.function', () => {
+    it('type name to be correct', () => {
+        expect(Types.function.typeName).toBe('function');
+    });
+
     it('does not throw an error', () => {
         expect(() => {
             typecheck(

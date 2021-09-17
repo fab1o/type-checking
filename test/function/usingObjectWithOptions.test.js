@@ -25,7 +25,7 @@ describe('function using object as argument for input', () => {
         expect(() => {
             createAccountWithOptions();
         }).toThrow(
-            'createAccountWithOptions(options) options expected an Object with properties but received undefined.'
+            'createAccountWithOptions(options) options expected an Object but received undefined.'
         );
     });
 

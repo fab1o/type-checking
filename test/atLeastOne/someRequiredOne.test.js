@@ -4,46 +4,48 @@ import { typecheck, Types } from '../../src';
 /* An example of a function that requires that at least one is provided
 /* in a selective list of params
 */
-function funcSomeRequiredOne() {
-    const requiredOneOf = {
+function funcSomeRequiredOne(name, year, dob) {
+    const requiredOneOfParams = {
         name: Types.string.optional,
         year: Types.number.optional
     };
 
-    const nonRequired = {
-        dob: Types.date.undefinable
+    const nonRequiredParams = {
+        dob: Types.date.optional
     };
 
     // must be put in the same order as function parameters
     const params = {
-        ...requiredOneOf,
-        ...nonRequired
+        ...requiredOneOfParams,
+        ...nonRequiredParams
     };
 
     typecheck('funcSomeRequiredOne', params, arguments);
-    typecheck.atLeastOne('funcSomeRequiredOne', requiredOneOf, arguments);
+
+    typecheck.atLeastOne('funcSomeRequiredOne', requiredOneOfParams, arguments);
 }
 
 function funcSomeRequiredOneWithOptions(options) {
-    const requiredOneOf = {
+    const requiredOneOfParams = {
         name: Types.string.optional,
         year: Types.number.optional
     };
 
-    const nonRequired = {
-        dob: Types.date.undefinable
+    const nonRequiredParams = {
+        dob: Types.date.optional
     };
 
     const params = {
         options: Types.object({
-            ...requiredOneOf,
-            ...nonRequired
+            ...requiredOneOfParams,
+            ...nonRequiredParams
         })
     };
 
     typecheck('funcSomeRequiredOneWithOptions', params, arguments);
+
     // pass in options instead of arguments here:
-    typecheck.atLeastOne('funcSomeRequiredOneWithOptions', requiredOneOf, options);
+    typecheck.atLeastOne('funcSomeRequiredOneWithOptions', requiredOneOfParams, options);
 }
 
 describe('someRequiredOne', () => {
@@ -57,9 +59,9 @@ describe('someRequiredOne', () => {
 
     it('throws an error', () => {
         expect(() => {
-            funcSomeRequiredOne(undefined, 2020, null);
+            funcSomeRequiredOne(undefined, 2020, 1);
         }).toThrow(
-            'funcSomeRequiredOne(name, year, dob) dob expected a Date or undefined but received null.'
+            'funcSomeRequiredOne(name, year, dob) dob expected a Date or null or undefined but received a Number: 1.'
         );
     });
 
@@ -76,11 +78,11 @@ describe('someRequiredOne', () => {
     it('another error', () => {
         expect(() => {
             funcSomeRequiredOneWithOptions({
-                dob: null,
+                dob: 1,
                 year: 2020
             });
         }).toThrow(
-            'funcSomeRequiredOneWithOptions({ name, year, dob }) options.dob expected a Date or undefined but received null.'
+            'funcSomeRequiredOneWithOptions({ name, year, dob }) options.dob expected a Date or null or undefined but received a Number: 1.'
         );
     });
 });

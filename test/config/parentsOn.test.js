@@ -1,16 +1,20 @@
 import { Config, Types, typecheck } from '../../src';
 
-function parentsOn() {
-    const params = {
-        options: Types.object({
-            name: Types.string
-        })
-    };
+describe.skip('Config.parentsOn', () => {
+    function parentsOn() {
+        const params = {
+            options: Types.object({
+                name: Types.string
+            })
+        };
 
-    typecheck(parentsOn, params, arguments);
-}
+        typecheck(parentsOn, params, arguments);
+    }
 
-describe('Config.parentsOn', () => {
+    afterAll(() => {
+        Config.reset();
+    });
+
     it('false', () => {
         expect(() => {
             Config.setup({

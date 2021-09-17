@@ -1,11 +1,10 @@
 /* eslint-disable no-use-before-define */
-import { Config } from '../config';
-import { getValueName } from '../util';
-
 import { Params } from './params';
+import { buildExpectedMessage } from './buildExpectedMessage';
+import { buildReceivedMessage } from './buildReceivedMessage';
 
 /**
- * @desc Error message builder.
+ * @desc TypeChecking.MessageBuilder - Error message builder.
  */
 export class MessageBuilder {
     /**
@@ -18,9 +17,9 @@ export class MessageBuilder {
     }
 
     /**
-     * @param {String} name Param name.
-     * @param {TypeChecking.MessageBuilder.Param} [parent] - The parent param.
-     * @desc Sets the current param based on a given param name.
+     * @param {String} name - Name of param.
+     * @param {TypeChecking.MessageBuilder.Param} [parent] - A parent param.
+     * @desc Sets the current param based on a given param name and parent.
      */
     setCurrentParam(name, parent) {
         this.param = this.methodSignature.findParam(name, parent);
@@ -47,51 +46,38 @@ export class MessageBuilder {
 
         this.param.isArray = isArray;
 
+        // return current param for convenience
         return this.param;
     }
 
     /**
-     * @param {*} value - Value to stringify.
-     * @returns {String} The "but received..." part of the error message.
-     */
-    static buildReceivedMessage(value) {
-        const valueName = getValueName(value, {
-            includeTypeName: true
-        });
-
-        return `${Config.receivedMessage} ${valueName}`;
-    }
-
-    /**
      * @param {String} customMessage - Custom error message.
-     * @desc Creates a custom error message.
+     * @desc Generates a custom error message.
      * @returns {String} Error message: "Object.method() custom error message."
      */
     buildCustomMessage(customMessage) {
-        return `${this.methodSignature} ${customMessage}.`.trim();
+        return `${this.methodSignature} ${customMessage}.`;
     }
 
     /**
      * @param {Object} options
      * @param {*} options.value - The user data.
-     * @param {TypeChecking.Type} options.type - Type of validator.
-     * @param {Array<*>} [options.expectedArgs=[]] - Expected arguments, must set to null when an empty string could be valid.
+     * @param {TypeChecking.Type} options.type - Type.
+    //  * @param {TypeChecking.Type} [options.firstType=null] - The first type from combinatory types.
+     * @param {Array<*>} [options.expectedArgs] - Expected arguments, must set to null when an empty string could be valid.
+    //  * @param {Array<*>} [options.firstTypeExpectedArgs] - What values are expected for this type.or.type.
      * @param {String} [options.message] - Custom error message.
-     * @param {Boolean} [options.isNested=false] - Whether it is expected nested object.
+    //  * @param {'or'|'and'} [options.operator] - Operator for a combinatory type.
      * @desc Generates the error message.
      * @returns {String} Error message: "Object.method(param, param2, ...) param expected a type but received input."
      */
     buildMessage(options) {
-        const { value, type, expectedArgs = [], message, isNested = false } = options;
+        const { value } = options;
 
-        const typeDescription = type.toString(message, ...expectedArgs);
+        const expected = buildExpectedMessage(options);
 
-        const expected = `${Config.expectedMessage} ${typeDescription}`;
+        const butReceived = buildReceivedMessage(value);
 
-        const butReceived = MessageBuilder.buildReceivedMessage(value);
-
-        const withProperties = isNested ? ` ${Config.withPropsMessage}` : '';
-
-        return `${this.methodSignature} ${this.param} ${expected}${withProperties}${this.param.extension} ${butReceived}.`;
+        return `${this.methodSignature} ${this.param} ${expected}${this.param.extension} ${butReceived}.`;
     }
 }

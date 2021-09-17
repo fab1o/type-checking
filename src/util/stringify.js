@@ -15,7 +15,7 @@ const meta = {
     '\n': '\\n',
     '\f': '\\f',
     '\r': '\\r',
-    '"': '\\"',
+    '"': '"',
     '\\': '\\\\'
 };
 
@@ -130,9 +130,18 @@ function strVal(value, maxNodes = 0) {
                 case 'Number':
                     return String(value.valueOf());
 
-                default:
-                    // String
+                case 'String':
                     return parseString(value.valueOf());
+
+                default:
+                    // special types of objects
+                    const toString = `${value.valueOf()}`;
+
+                    if (toString.indexOf('[object') === -1) {
+                        return toString;
+                    }
+
+                    return '';
             }
 
         default:

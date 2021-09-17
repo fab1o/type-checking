@@ -1,6 +1,10 @@
 import { Types, typecheck } from '../../src';
 
-describe('Types.greater', () => {
+describe.skip('Types.greater', () => {
+    it('type name to be correct', () => {
+        expect(Types.greater().typeName).toBe('greater');
+    });
+
     it('throw an error', () => {
         expect(() => {
             typecheck(
@@ -9,9 +13,7 @@ describe('Types.greater', () => {
                 },
                 [1]
             );
-        }).toThrow(
-            '{code} code expected a Number greater than 1 but received a Number: 1.'
-        );
+        }).toThrow('{code} code expected a Number greater than 1 but received a Number: 1.');
     });
 
     it('an Error is not thrown.', () => {

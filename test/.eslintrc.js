@@ -19,7 +19,14 @@ module.exports = {
         'max-classes-per-file': 'off',
 
         // allow sparse arrays
-        'no-sparse-arrays': 'off'
+        'no-sparse-arrays': 'off',
+
+        // allow unused vars so examples in tests are more clear
+        'no-unused-vars': 'off',
+
+        // skip tests that use types that do not exist
+        'jest/no-disabled-tests': 'off',
+        'jest/no-commented-out-tests': 'off'
     },
     settings: {
         'disable/plugins': ['jsdoc', 'require-jsdoc-except']

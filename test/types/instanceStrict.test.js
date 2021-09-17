@@ -3,6 +3,10 @@ import { Types, typecheck } from '../../src';
 class Student {}
 
 describe('Types.instanceScrict', () => {
+    it('type name to be correct', () => {
+        expect(Types.instanceStrict().typeName).toBe('instanceStrict');
+    });
+
     it('throw an error', () => {
         expect(() => {
             typecheck(
@@ -23,6 +27,17 @@ describe('Types.instanceScrict', () => {
                     date: Types.instanceStrict(Date)
                 },
                 [new Date()]
+            );
+        }).not.toThrow();
+    });
+
+    it.skip('no error is thrown when value is {}.', () => {
+        expect(() => {
+            typecheck(
+                {
+                    obj: Types.instanceStrict(Number).or.object()
+                },
+                [{}]
             );
         }).not.toThrow();
     });

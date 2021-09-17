@@ -1,77 +1,115 @@
-import { Config } from '../config';
-
-import { customValidateCreator, genericValidateCreator } from '../validateCreator';
-import { getArgumentValueName } from '../util';
-
 /**
- * @desc Type used to validate params.
+ * @desc TypeChecking.Type - used to validate params.
  */
 export class Type {
     /**
      * @param {String} name - Name could be the assert name in the check-types library.
      * @param {Object} [options={}]
-     * @param {String} [options.singular] - Name in singular.
-     * @param {String} [options.plural] - Name in plural.
-     * @param {Boolean} [options.isArray=false] - Whether type is part of "array.of" or not.
+     * @param {String} [options.assert=name] - The assert in check-types to use.
+     * @param {String} [options.singular=name] - Name in singular.
+     * @param {String} [options.plural=name+'s'] - Name in plural.
+     * @param {Boolean} [options.isArray] Type is array.
+    //  * @param {'array'|'nonEmptyArray'} [options.arrayOfType] "array" or "nonEmptyArray" or null.
      * @param {Boolean} [options.expectArgs=false] - Whether type expects an argument or not.
+     * @param {Boolean} [options.isExtensible=true] - Whether or not it has extensions.
+     * @param {Boolean} [options.isArrayable=true] - Whether or not it has array.of equivalent.
      * @param {Boolean} [options.autoDisplayArgs=true] - Whether or not automatically display arguments.
-     * @param {Function} [options.stringify=getArgumentValueName] - A function to replace the default stringify function for the arguments: x and y.
-     * @param {Function} [options.validateCreator=genericValidateCreator] - A function to replace the generic type creator function.
+     * @param {TypeChecking.Type} [options.firstType] - The first type from combinatory types.
+     * @param {Function} [options.validator] - The validator function used to validate the user input.
+    //  * @param {Object} [options.orAsserts] - Asserts for type.or combination.
+    //  * @param {Object} [options.andAsserts] - Asserts for type.and combination.
+     * @param {'or'|'and'} [options.operator] - Operator for a combinatory type.
+     * @param {Function} [options.validateCreator=()=>false] - A validate creator function.
+     * @param {Function} [options.stringify=(x)=>String(x)] - A stringify function for the expected arguments.
      */
     constructor(name, options = {}) {
         const {
+            assert = name,
             singular = name,
             plural = `${name}s`,
             isArray = false,
+            // arrayOfType, ***
             expectArgs = false,
+            isExtensible = true,
+            isArrayable = true,
             autoDisplayArgs = true,
-            stringify = getArgumentValueName,
-            validateCreator = genericValidateCreator
-        } = options;
+            firstType,
+            validator,
+            // orAsserts, ***
+            // andAsserts, ***
+            operator,
+            validateCreator = () => false,
+            stringify = (x) => String(x)
+        } = options ?? {};
 
         this.name = name;
+        this.assert = assert;
+        this.plural = plural;
+        this.isArray = isArray;
+        if (isArray) {
+            this.singular = `an Array of ${this.plural}`;
+        } else {
+            this.singular = singular;
+        }
+        // this.arrayOfType = arrayOfType; ***
 
-        this.singular = singular || name;
-        this.plural = plural || `${name}s`;
-        this.isArray = !!isArray;
+        // switch (arrayOfType) { ***
+        //     case 'array':
+        //         this.singular = `an Array of ${this.plural}`;
+        //         break;
+        //     case 'nonEmptyArray':
+        //         this.singular = `a non-empty Array of ${this.plural}`;
+        //         break;
+        //     default:
+        //         this.singular = singular;
+        //         break;
+        // }
+
+        this.firstType = firstType;
+        this.validator = validator;
         this.expectArgs = !!expectArgs;
+        this.isExtensible = !!isExtensible;
+        this.isArrayable = !!isArrayable;
         this.autoDisplayArgs = !!autoDisplayArgs;
-        this.stringify = stringify || getArgumentValueName;
-        this.validateCreator = validateCreator || genericValidateCreator;
+        this.operator = operator;
+        this.validateCreator = validateCreator;
+        this.stringify = stringify;
+
+        // this.or = { ***
+        //     asserts: orAsserts
+        // };
+        // this.and = {
+        //     asserts: andAsserts
+        // };
     }
+
+    // /**
+    //  * @desc Whether this type is an array.of or nonEmptyArray.of type.
+    //  * @returns {Boolean}
+    //  */
+    // get isArray() { ***
+    //     return !!this.arrayOfType;
+    // }
 
     /**
      * @desc Creates a type validator.
+    //  * @param {Array<*>} [expectedArgs] - expectedArgs for combinatory types.
      * @returns {Function} - Validator function.
      */
+    // createValidator(expectedArgs) { ***
     createValidator() {
         if (this.expectArgs) {
             const validateWithArguments = function (...args) {
+                // return this.validateCreator(this, expectedArgs, ...args);
                 return this.validateCreator(this, ...args);
             };
 
             return validateWithArguments.bind(this);
         }
 
+        // return this.validateCreator(this, expectedArgs);
+
         return this.validateCreator(this);
-    }
-
-    /**
-     * @param {Function} [validator=() => false] - Custom function that validates input, must return boolean.
-     * @param {String} [message] - Error message that describes what is expected.
-     * @desc Creates a custom type validator.
-     * @returns {Function} Validator function.
-     */
-    createCustomValidator(validator, message) {
-        if (this.expectArgs) {
-            const validateWithArguments = function (...args) {
-                return customValidateCreator(this, validator, message, ...args);
-            };
-
-            return validateWithArguments.bind(this);
-        }
-
-        return customValidateCreator(this, validator, message);
     }
 
     /**
@@ -85,15 +123,7 @@ export class Type {
             return message;
         }
 
-        let typeName;
-
-        if (this.isArray && this.plural) {
-            typeName = `${Config.arrayOfMessage} ${this.plural}`;
-        } else if (this.singular) {
-            typeName = this.singular;
-        } else {
-            typeName = '';
-        }
+        let typeName = this.singular;
 
         if (/{[a-k]}/.test(typeName)) {
             // a max of 6 arguments are supported for user defined template

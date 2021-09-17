@@ -1,39 +1,46 @@
 import { assert } from '@fab1o/check-types';
 
+import { Config } from '../config';
+
 import { extendValidateCreator } from './extendValidateCreator';
 
 /**
- * @typedef {Object} Options
- * @property {*} value User input value for the parameter in question.
- * @property {TypeChecking.MessageBuilder.MessageBuilder} messageBuilder MessageBuilder object.
- * @property {Array|Object} input All user input.
- * @property {Error} ErrorType The Error type to throw.
- *
  * @param {TypeChecking.Type} type The custom type.
- * @param {Function} [validator=() => false] Custom function that validates input, must return boolean.
+//  * @param {Array<*>} [firstTypeExpectedArgs] - Expected values for the first type of the combinatory type.
+ * @param {Function} [validator=()=>false] Custom function that validates input, must return boolean.
  * @param {String} [message] Error message that describes what is expected.
  * @param {Array<*>} expectedArgs What values are expected for this type.
  * @desc Creates a validator for Types.custom type.
  * @throws {Error} When type checking fails.
  * @returns {Function} Validator function for {@link Types.custom}.
  */
+// ***
+// export function customValidateCreator(
+//     type,
+//     firstTypeExpectedArgs,
+//     validator = () => false,
+//     message,
+//     ...expectedArgs
+// ) {
 export function customValidateCreator(
     type,
     validator = () => false,
     message,
     ...expectedArgs
 ) {
+    // const { isArray, arrayOfType } = type; ***
     const { isArray } = type;
 
     /**
-     * @param {Options} options
+     * @param {*} value - User input value for the param in question.
+     * @param {TypeChecking.TypeChecker} typeChecker - TypeChecker object.
+     * @param {String} [loggingFunc] - The function name for the logging: log, warn, info, error.
      */
-    function validate(options) {
-        const { value, typeChecker, input } = options;
+    function validate(value, typeChecker, loggingFunc) {
         // typeChecker will always be assigned here
-        const { messageBuilder, ErrorType } = typeChecker;
+        const { ErrorType } = typeChecker;
 
-        const errorMessage = messageBuilder.buildMessage({
+        const errorMessage = typeChecker.messageBuilder.buildMessage({
             value,
             type,
             message,
@@ -44,19 +51,26 @@ export function customValidateCreator(
             let isOk = false;
 
             try {
-                // pass in the the whole user 'input' to dev - could be useful.
-                isOk = validator(val, input, ...expectedArgs);
+                isOk = validator(val, ...expectedArgs);
+                // make sure it's boolean (falsy/truthy values are allowed).
+                isOk = !!isOk;
             } catch (ex) {
-                throw new ErrorType(
-                    `${messageBuilder.methodSignature} ${type.name} validator function threw an error: ${ex.message}`
-                );
+                Config.logger.warn('TypeChecking', ex);
             }
 
-            assert(isOk, errorMessage, ErrorType);
+            if (isOk === false) {
+                if (loggingFunc) {
+                    Config.logger[loggingFunc](errorMessage);
+                } else {
+                    throw new ErrorType(errorMessage);
+                }
+            }
         }
 
         if (isArray) {
-            // do not fail if array is empty
+            // check for array or nonEmptyArray
+            // ***
+            // assert[arrayOfType](value, errorMessage, ErrorType);
             assert.array(value, errorMessage, ErrorType);
             value.forEach((val) => assertValue(val));
         } else {
@@ -64,5 +78,5 @@ export function customValidateCreator(
         }
     }
 
-    return extendValidateCreator(validate, type.name);
+    return extendValidateCreator(validate, type);
 }

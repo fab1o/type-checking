@@ -1,6 +1,6 @@
 import { Types, typecheck } from '../../../src';
 
-describe('Types.x.nullable', () => {
+describe.skip('Types.x.nullable', () => {
     it('does not throw error when passing null to a nullable param.', () => {
         expect(() => {
             typecheck(
@@ -20,7 +20,7 @@ describe('Types.x.nullable', () => {
                 },
                 []
             );
-        }).toThrow(SyntaxError);
+        }).toThrow(TypeError);
     });
 
     it('does not throw error when passing null to a types.array.of..nullable param.', () => {

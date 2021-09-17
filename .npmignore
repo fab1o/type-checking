@@ -10,6 +10,7 @@
 .npmignore
 .prettierignore
 .prettierrc.js
+release.md
 
 *.log
 *.map

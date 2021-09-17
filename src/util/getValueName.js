@@ -27,9 +27,9 @@ export function getValueName(value, options = {}) {
         return String(value);
     }
 
-    // function
+    // typeof === 'function'
     if (Check.function(value)) {
-        const article = includeTypeName ? getArticle(value) : '';
+        const article = includeTypeName ? 'a ' : '';
 
         return getTypeName(value) || `${article}Function`;
     }
@@ -47,9 +47,9 @@ export function getValueName(value, options = {}) {
 
     const typeName = includeTypeName ? `${getArticle(value)}${value.constructor.name}` : '';
 
-    const colon = includeTypeName && includeStrigify ? ': ' : '';
-
     const valueStringified = includeStrigify ? stringify(value) : '';
+
+    const colon = includeTypeName && includeStrigify && valueStringified ? ': ' : '';
 
     return `${typeName}${colon}${valueStringified}`;
 }

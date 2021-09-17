@@ -1,7 +1,7 @@
 import { typecheck, Types } from '../../src';
 
 class Student {
-    methodWithArgs() {
+    methodWithArgs(name, year) {
         const params = {
             name: Types.string.optional,
             year: Types.number.optional

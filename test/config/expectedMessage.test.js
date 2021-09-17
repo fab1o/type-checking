@@ -1,14 +1,14 @@
 import { Config, Types, typecheck } from '../../src';
 
-function expectName() {
-    const params = {
-        name: Types.string
-    };
+describe.skip('Config.expectedMessage', () => {
+    function expectName() {
+        const params = {
+            name: Types.string
+        };
 
-    typecheck(expectName, params, arguments);
-}
+        typecheck(expectName, params, arguments);
+    }
 
-describe('Config.expectedMessage', () => {
     it('should be', () => {
         expect(() => {
             Config.setup({

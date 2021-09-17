@@ -1,62 +1,42 @@
 import Check from '@fab1o/check-types';
 
+import { checkValue } from './util/checkValue';
 import { extendValidateCreator } from './extendValidateCreator';
 
 /**
- * @typedef {Object} Options
- * @property {*} value - User input value for the parameter in question.
- * @property {TypeChecking.MessageBuilder.MessageBuilder} messageBuilder - MessageBuilder object.
- * @property {Array|Object} input - All user input.
- * @property {Error} ErrorType - The Error type to throw.
- *
  * @param {TypeChecking.Type} type - The object type.
+//  * @param {Array<*>} [firstTypeExpectedArgs] - Expected values for the first type of the combinatory type.
  * @param {Object<TypeChecking.Type>} [objParams=null] - Params object built with Types.
  * @desc Creates a checker for Types.object type.
  * @throws {Error} When type checking fails.
  * @returns {Function} Validator function for {@link Types.object}.
  */
+// export function objectValidateCreator(type, firstTypeExpectedArgs, objParams = null) {
 export function objectValidateCreator(type, objParams = null) {
     const { isArray } = type;
 
     const isNested = Check.nonEmptyObject(objParams);
 
     /**
-     * @param {Options} options
+     * @param {*} value - User input value for the param in question.
+     * @param {TypeChecking.TypeChecker} typeChecker - TypeChecker object.
+     * @param {String} [loggingFunc] - The function name for the logging: log, warn, info, error.
      */
-    function validate(options) {
-        const { value, typeChecker } = options;
-        const { messageBuilder, ErrorType } = typeChecker;
+    function validate(value, typeChecker, loggingFunc) {
+        const isOk = checkValue(value, type, typeChecker, loggingFunc); // , firstTypeExpectedArgs); ***
 
-        let isOk = false;
-
-        if (isArray) {
-            isOk = Check.array.of.object(value);
-        } else {
-            isOk = Check.object(value);
-        }
-
-        if (isOk === false) {
-            const errorMessage = messageBuilder.buildMessage({
-                value,
-                type,
-                isNested
-            });
-
-            throw new ErrorType(errorMessage);
-        }
-
-        if (isNested) {
-            const parent = messageBuilder.setParentParams(objParams, isArray);
+        if (isOk && isNested) {
+            const parent = typeChecker.messageBuilder.setParentParams(objParams, isArray);
 
             if (isArray) {
                 value.forEach((val) =>
                     typeChecker.execute({ objParams, parent, input: val })
                 );
+            } else {
+                typeChecker.execute({ objParams, parent, input: value });
             }
-
-            typeChecker.execute({ objParams, parent, input: value });
         }
     }
 
-    return extendValidateCreator(validate, 'object');
+    return extendValidateCreator(validate, type);
 }
