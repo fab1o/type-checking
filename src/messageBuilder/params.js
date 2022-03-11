@@ -114,8 +114,9 @@ export class Params {
     toString(params = this.params) {
         const paramsList = params.map((param) => this.stringify(param));
 
-        const openBracket = this.displayBrackets && this.atLeastOne ? '{ ' : '';
-        const closBracket = this.displayBrackets && this.atLeastOne ? ' }' : '';
+        // brackets for Types.object() param
+        const openBracket = this.displayBrackets && this.atLeastOne ? '{' : '';
+        const closBracket = this.displayBrackets && this.atLeastOne ? '}' : '';
 
         return `${openBracket}${paramsList.join(', ')}${closBracket}`;
     }
@@ -142,6 +143,7 @@ export class Params {
 
         const arrayParamNames = this.toString(param.params);
 
-        return `${openBracket}{ ${arrayParamNames}${parentParams} }${closBracket}`;
+        // brackets for Types.array.of.object() param
+        return `${openBracket}{${arrayParamNames}${parentParams}}${closBracket}`;
     }
 }

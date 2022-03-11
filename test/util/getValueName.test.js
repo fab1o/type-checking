@@ -26,8 +26,14 @@ describe('getValueName', () => {
         expect(output).toBe('funcArrow');
     });
 
-    it('anonymous functions have no name', () => {
+    it('anonymous function', () => {
         const output = getValueName(() => {});
+
+        expect(output).toBe('a Function');
+    });
+
+    it('anonymous function with type name', () => {
+        const output = getValueName(() => {}, { includeTypeName: true });
 
         expect(output).toBe('a Function');
     });
@@ -120,106 +126,157 @@ describe('getValueName', () => {
 
         const className = getValueName(Account);
 
-        // static name now has priority over instance toString as per Config set
-        expect(className).toBe(Account.name);
+        expect(className).toBe(Account.prototype.toString());
 
         const account = new Account();
         const instanceName = getValueName(account);
 
-        expect(instanceName).toBe(Account.name);
+        expect(instanceName).toBe(account.toString());
+
+        const noDifference = getValueName(account, { includeTypeName: true });
+
+        expect(noDifference).toBe(account.toString());
     });
 
-    it('simple objects are not instances of a class, so names are simply "Object"', () => {
+    it('simple object', () => {
         const simpleObject = {
             name: 'SimpleObject'
         };
 
-        expect(getValueName(simpleObject)).toBe('an Object: {name:"SimpleObject"}');
+        const output = getValueName(simpleObject, { includeTypeName: true });
 
-        // test without stringifying
-        expect(
-            getValueName(simpleObject, {
-                includeStrigify: false
-            })
-        ).toBe('an Object');
+        expect(output).toBe('an Object: {name:"SimpleObject"}');
+    });
 
-        // test new Number
-        expect(getValueName(new Object(simpleObject))).toBe(
-            'an Object: {name:"SimpleObject"}'
-        );
+    it('simple object without type name', () => {
+        const simpleObject = {
+            name: 'SimpleObject'
+        };
+
+        const output = getValueName(simpleObject);
+
+        expect(output).toBe('{name:"SimpleObject"}');
+    });
+
+    it('new Object', () => {
+        const simpleObject = {
+            name: 'SimpleObject'
+        };
+
+        const output = getValueName(new Object(simpleObject), { includeTypeName: true });
+
+        expect(output).toBe('an Object: {name:"SimpleObject"}');
     });
 
     it('Number', () => {
         const value = 1;
 
-        expect(getValueName(value)).toBe('a Number: 1');
+        const output = getValueName(value, { includeTypeName: true });
 
-        // test without stringifying
-        expect(
-            getValueName(value, {
-                includeStrigify: false
-            })
-        ).toBe('a Number');
+        expect(output).toBe('a Number: 1');
+    });
 
-        // test new Number
-        expect(getValueName(new Number(value))).toBe('a Number: 1');
+    it('Number without type name', () => {
+        const value = 1;
+
+        const output = getValueName(value);
+
+        expect(output).toBe('1');
+    });
+
+    it('new Number', () => {
+        const value = 1;
+
+        const output = getValueName(new Number(value), { includeTypeName: true });
+
+        expect(output).toBe('a Number: 1');
     });
 
     it('Array', () => {
         const value = [1, 2, 3];
 
-        expect(getValueName(value)).toBe('an Array: [1, 2, ...]');
+        const output = getValueName(value, { includeTypeName: true });
 
-        // test without stringifying
-        expect(
-            getValueName(value, {
-                includeStrigify: false
-            })
-        ).toBe('an Array');
+        expect(output).toBe('an Array: [1, 2, ...]');
+    });
 
-        // test new Array
+    it('Array without type name', () => {
+        const value = [1, 2, 3];
+
+        const output = getValueName(value);
+
+        expect(output).toBe('[1, 2, ...]');
+    });
+
+    it('new Array', () => {
         const array = new Array();
 
         array.push(1);
         array.push(2);
         array.push(3);
 
-        expect(getValueName(array)).toBe('an Array: [1, 2, ...]');
+        const output = getValueName(array, { includeTypeName: true });
+
+        expect(output).toBe('an Array: [1, 2, ...]');
     });
 
     it('String', () => {
-        const value = '';
+        const value = 'str';
 
-        expect(getValueName(value)).toBe('a String: ""');
+        const output = getValueName(value, { includeTypeName: true });
 
-        // test without stringifying
-        expect(
-            getValueName(value, {
-                includeStrigify: false
-            })
-        ).toBe('a String');
+        expect(output).toBe('a String: "str"');
+    });
 
-        // test new String
-        expect(getValueName(new String(value))).toBe('a String: ""');
+    it('String without type name', () => {
+        const value = 'str';
+
+        const output = getValueName(value);
+
+        expect(output).toBe('"str"');
+    });
+
+    it('new String', () => {
+        const value = 'str';
+
+        const output = getValueName(new String(value), { includeTypeName: true });
+
+        expect(output).toBe('a String: "str"');
     });
 
     it('Boolean', () => {
         const value = true;
 
-        expect(getValueName(value)).toBe('a Boolean: true');
+        const output = getValueName(value, { includeTypeName: true });
 
-        // test without stringifying
-        expect(
-            getValueName(value, {
-                includeStrigify: false
-            })
-        ).toBe('a Boolean');
+        expect(output).toBe('a Boolean: true');
+    });
 
-        // test new Boolean
-        expect(getValueName(new Boolean(value))).toBe('a Boolean: true');
+    it('Boolean without type name', () => {
+        const value = true;
+
+        const output = getValueName(value);
+
+        expect(output).toBe('true');
+    });
+
+    it('new Boolean', () => {
+        const value = true;
+
+        const output = getValueName(new Boolean(value), { includeTypeName: true });
+
+        expect(output).toBe('a Boolean: true');
     });
 
     it('undefined', () => {
+        let value;
+
+        const output = getValueName(value, { includeTypeName: true });
+
+        expect(output).toBe('undefined');
+    });
+
+    it('undefined without type name', () => {
         let value;
 
         const output = getValueName(value);
@@ -230,12 +287,28 @@ describe('getValueName', () => {
     it('null', () => {
         const value = null;
 
+        const output = getValueName(value, { includeTypeName: true });
+
+        expect(output).toBe('null');
+    });
+
+    it('null without type name', () => {
+        const value = null;
+
         const output = getValueName(value);
 
         expect(output).toBe('null');
     });
 
     it('NaN', () => {
+        const value = '' / '';
+
+        const output = getValueName(value, { includeTypeName: true });
+
+        expect(output).toBe('NaN');
+    });
+
+    it('NaN without type name', () => {
         const value = '' / '';
 
         const output = getValueName(value);
@@ -246,23 +319,39 @@ describe('getValueName', () => {
     it('Infinity', () => {
         const value = 1 / '';
 
-        const output = getValueName(value);
+        const output = getValueName(value, { includeTypeName: true });
 
         expect(output).toBe('a Number: Infinity');
+    });
+
+    it('Infinity without type name', () => {
+        const value = 1 / '';
+
+        const output = getValueName(value);
+
+        expect(output).toBe('Infinity');
     });
 
     it('Date', () => {
         const value = new Date();
 
+        const output = getValueName(value, { includeTypeName: true });
+
+        expect(output).toMatch(/a Date: "\d.*"/);
+    });
+
+    it('Date without type name', () => {
+        const value = new Date();
+
         const output = getValueName(value);
 
-        expect(output).toMatch(/a Date: ".*"/);
+        expect(output).toMatch(/"\d.*"/);
     });
 
     it('String with espaced chars', () => {
         const value = 'hey "someone",\n this isn\'t a letter.\f\r';
 
-        const output = getValueName(value);
+        const output = getValueName(value, { includeTypeName: true });
 
         expect(output).toBe('a String: "hey "someone",\\n this isn\'t a letter.\\f\\r"');
     });

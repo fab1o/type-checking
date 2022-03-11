@@ -9,7 +9,17 @@ describe('Parent method', () => {
                 name: null
             });
         }).toThrow(
-            'Parent.method({ name }) options.name expected a String but received null.'
+            'MyParent.method({name}) options.name expected a String but received null.'
+        );
+    });
+
+    it('throw an error on expected', () => {
+        expect(() => {
+            const parent = new Parent();
+
+            parent.expected(null);
+        }).toThrow(
+            'MyParent.expected(date) date expected an instance of Number but received null.'
         );
     });
 });

@@ -19,12 +19,12 @@ describe('Types.arrayBufferView', () => {
 
             typecheck(
                 {
-                    buffer: Types.arrayBufferView
+                    view: Types.arrayBufferView
                 },
                 [buffer]
             );
         }).toThrow(
-            '{buffer} buffer expected an ArrayBufferView but received an ArrayBuffer.'
+            '{view} view expected an ArrayBufferView but received an ArrayBuffer: {}.'
         );
     });
 
@@ -32,22 +32,22 @@ describe('Types.arrayBufferView', () => {
         expect(() => {
             typecheck(
                 {
-                    buffer: Types.arrayBufferView
+                    view: Types.arrayBufferView
                 },
                 [null]
             );
-        }).toThrow('{buffer} buffer expected an ArrayBufferView but received null.');
+        }).toThrow('{view} view expected an ArrayBufferView but received null.');
     });
 
     it('throw an error for given type', () => {
         expect(() => {
-            const buffer = new Uint16Array(16);
+            const view = new Uint16Array(16);
 
             typecheck(
                 {
-                    buffer: Types.arrayBufferView
+                    view: Types.arrayBufferView
                 },
-                [buffer]
+                [view]
             );
         }).not.toThrow();
     });
@@ -56,7 +56,7 @@ describe('Types.arrayBufferView', () => {
         expect(() => {
             typecheck(
                 {
-                    buffer: Types.arrayBufferView.optional
+                    view: Types.arrayBufferView.optional
                 },
                 []
             );
@@ -67,7 +67,7 @@ describe('Types.arrayBufferView', () => {
         expect(() => {
             typecheck(
                 {
-                    buffer: Types.arrayBufferView.optional
+                    view: Types.arrayBufferView.optional
                 },
                 [null]
             );
@@ -78,9 +78,9 @@ describe('Types.arrayBufferView', () => {
         expect(() => {
             typecheck(
                 {
-                    buffer: Types.arrayBufferView.or.nonEmptyString
+                    view: Types.arrayBufferView.or.nonEmptyString
                 },
-                ['buffer']
+                ['view']
             );
         }).not.toThrow();
     });

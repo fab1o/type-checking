@@ -16,7 +16,17 @@ export default class Child extends Parent {
         typecheck(this, this.method, params, arguments);
     }
 
+    expected() {
+        const params = {
+            options: Types.object({
+                parent: Types.instanceStrict(Parent)
+            })
+        };
+
+        typecheck(this, this.expected, params, arguments);
+    }
+
     toString() {
-        return 'Child';
+        return 'MyChild';
     }
 }

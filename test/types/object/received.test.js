@@ -66,4 +66,30 @@ describe('Types.object - received messages', () => {
             );
         }).toThrow('{ok} ok expected a Boolean but received an Object: {myself:{...}}.');
     });
+
+    it('throw an error for object without constructor', () => {
+        expect(() => {
+            const obj = Object.create(null, {});
+
+            obj.prop = 'prop';
+
+            typecheck(
+                {
+                    ok: Types.boolean
+                },
+                [obj]
+            );
+        }).toThrow('{ok} ok expected a Boolean but received an Object: {prop:"prop"}.');
+    });
+
+    it('throw an error for special object', () => {
+        expect(() => {
+            typecheck(
+                {
+                    ok: Types.boolean
+                },
+                [new URL('http://a.com')]
+            );
+        }).toThrow('{ok} ok expected a Boolean but received an URL: "http://a.com/".');
+    });
 });

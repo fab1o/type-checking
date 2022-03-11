@@ -9,7 +9,18 @@ describe('Child method', () => {
                 name: 'Fabio'
             });
         }).toThrow(
-            'Child.method({ code, isActive, ... }) options.code expected a Number but received undefined.'
+            'MyChild.method({code, isActive, ...}) options.code expected a Number but received undefined.'
+        );
+    });
+    it('throw an error on expected', () => {
+        expect(() => {
+            const child = new Child();
+
+            child.expected({
+                parent: null
+            });
+        }).toThrow(
+            'MyChild.expected({parent, ...}) options.parent expected an instance of MyParent but received null.'
         );
     });
 });

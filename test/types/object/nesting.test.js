@@ -72,7 +72,7 @@ describe('Types.object - nesting', () => {
                 ]
             );
         }).toThrow(
-            '{{ { { { child4 } } } }} child3.child4 expected an Object but received undefined.'
+            '{{{{{child4}}}}} child3.child4 expected an Object but received undefined.'
         );
     });
 
@@ -103,7 +103,7 @@ describe('Types.object - nesting', () => {
                 ]
             );
         }).toThrow(
-            '{outer, { name, year, { name2, year2 } }} options2.year2 expected a Number but received a Boolean: true.'
+            '{outer, {name, year, {name2, year2}}} options2.year2 expected a Number but received a Boolean: true.'
         );
     });
 
@@ -165,7 +165,7 @@ describe('Types.object - nesting', () => {
                 ]
             );
         }).toThrow(
-            '{outer, [{ name, year, [{ name, year }] }]} arrayOptions2.year expected a Number but received a Boolean: true.'
+            '{outer, [{name, year, [{name, year}]}]} arrayOptions2.year expected a Number but received a Boolean: true.'
         );
     });
 });

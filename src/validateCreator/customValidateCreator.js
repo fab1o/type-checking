@@ -38,7 +38,7 @@ export function customValidateCreator(
      */
     function validate(value, typeChecker, loggingFunc) {
         // typeChecker will always be assigned here
-        const { ErrorType } = typeChecker;
+        const { ErrorType, userArguments } = typeChecker;
 
         const errorMessage = typeChecker.messageBuilder.buildMessage({
             value,
@@ -51,7 +51,7 @@ export function customValidateCreator(
             let isOk = false;
 
             try {
-                isOk = validator(val, ...expectedArgs);
+                isOk = validator(val, userArguments, ...expectedArgs);
                 // make sure it's boolean (falsy/truthy values are allowed).
                 isOk = !!isOk;
             } catch (ex) {

@@ -1,6 +1,10 @@
 import { Types, typecheck } from '../../../src';
 
 describe('Types.object', () => {
+    it('type name to be correct', () => {
+        expect(Types.object().typeName).toBe('object');
+    });
+
     it('throw an error', () => {
         expect(() => {
             typecheck(
@@ -19,6 +23,25 @@ describe('Types.object', () => {
                     obj: Types.object()
                 },
                 [{}]
+            );
+        }).not.toThrow();
+    });
+
+    it('not throw an error when passing it by itself', () => {
+        expect(() => {
+            typecheck(
+                {
+                    params: Types.object({
+                        param1: Types.nonEmptyString,
+                        param2: Types.number
+                    })
+                },
+                [
+                    {
+                        param1: 'string',
+                        param2: 1
+                    }
+                ]
             );
         }).not.toThrow();
     });
@@ -67,7 +90,7 @@ describe('Types.object', () => {
                 },
                 [{ name: '' }]
             );
-        }).toThrow('{{ name, obj }} obj.obj expected an Object but received undefined.');
+        }).toThrow('{{name, obj}} obj.obj expected an Object but received undefined.');
     });
 
     it('not throw an error when nested and not missing required arguments', () => {
@@ -129,7 +152,7 @@ describe('Types.object', () => {
                 [{}]
             );
         }).toThrow(
-            '{{ name, year, isActive }} options.year expected a Number but received undefined.'
+            '{{name, year, isActive}} options.year expected a Number but received undefined.'
         );
     });
 });

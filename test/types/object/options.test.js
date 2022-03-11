@@ -31,7 +31,7 @@ describe('Types.object as options', () => {
             setName({
                 name: null
             });
-        }).toThrow('setName({ name, year }) opts.name expected a String but received null.');
+        }).toThrow('setName({name, year}) opts.name expected a String but received null.');
     });
 
     it('throw an error when a param of the object is wrong', () => {
@@ -44,7 +44,7 @@ describe('Types.object as options', () => {
                 },
                 [{ name: null }]
             );
-        }).toThrow('{{ name }} options.name expected a String but received null.');
+        }).toThrow('{{name}} options.name expected a String but received null.');
     });
 
     it('should not fail when options is optional', () => {
@@ -117,7 +117,7 @@ describe('Types.object as options', () => {
                 },
                 [{}]
             );
-        }).toThrow('{{ name }} options.name expected a String but received undefined.');
+        }).toThrow('{{name}} options.name expected a String but received undefined.');
     });
 
     it('should not fail when a param is length', () => {

@@ -11,76 +11,71 @@ import Check from '@fab1o/check-types';
 
 // #region private
 /**
- * MAX_LEN = Arbitrary value to indicate max length for a type name via toString()
- *           in case the user modifies the toString
- *           if toString().length is more than MAX_LEN, consider not a valid name
- *
- * NOT_OVERRIDDEN = Indicates toString() is from parent Object
+ * @param {String} typeName - Type name.
+ * @desc Whether type name is valid.
+ * @returns {Boolean}
  */
-const MAX_LEN = 128;
-const NOT_OVERRIDDEN = '[object ';
-
-/**
- * @param {Function|Object} type Type.
- * @desc Gets the type name from toString first, then use name property.
- * @returns {String}
- */
-function toString(type) {
-    return Check.function(type) ? funcToString(type) : objToString(type);
+function isValid(typeName) {
+    return typeName !== '' && typeName.indexOf('[object') === -1;
 }
 
 /**
- * @param {Function} type Type.
+ * @param {Function} type - Type function.
  * @desc Gets the type name from toString first, then use name property.
  * @returns {String}
  */
 function funcToString(type) {
     let typeName = '';
 
-    if (type.prototype && type.prototype.toString) {
-        typeName = type.prototype.toString() || '';
+    // do not use toString for primitive types
+    switch (type) {
+        case Date:
+        case String:
+        case Number:
+        case Boolean:
+            typeName = type.name;
+            break;
+        default:
+            if (Check.function(type.prototype?.toString)) {
+                try {
+                    // prevent possible errors like Illegal invocation or called on incompatible receiver
+                    typeName = type.prototype.toString();
+                } catch {}
+            }
     }
 
-    if (
-        typeName === '' ||
-        typeName.indexOf(NOT_OVERRIDDEN) !== -1 ||
-        typeName.length > MAX_LEN
-    ) {
-        typeName = type.name;
+    if (isValid(typeName)) {
+        return typeName;
     }
-    // typeName is empty if the function is an anonymous function
 
-    return typeName || '';
+    // type.name is empty if the function is an anonymous function
+    return type.name || 'a Function';
 }
 
 /**
- * @param {Object} type Type.
+ * @param {Object} type - Type object.
  * @desc Gets the type name from toString first, then use name property.
  * @returns {String}
  */
 function objToString(type) {
-    let typeName = type.toString() || '';
+    let typeName = '';
 
-    if (
-        typeName === '' ||
-        typeName.indexOf(NOT_OVERRIDDEN) !== -1 ||
-        typeName.length > MAX_LEN
-    ) {
-        // use its own constructor name if exists
-        if (Check.function(type.constructor)) {
-            typeName = type.constructor.name;
-        } else {
-            typeName = null;
-        }
+    try {
+        typeName = type.toString();
+    } catch {}
+
+    if (isValid(typeName)) {
+        return typeName;
     }
 
-    return typeName || 'Object';
+    // use its own constructor name if exists
+    return type.constructor?.name || 'an Object';
 }
 // #endregion
 
 /**
- * @param {Function|Object|String} type Type.
- * @param {String} [defaultVal] Default value in case given type is invalid.
+ * @param {Function|Object|String} type - Type function or object or string.
+ * @param {String} [defaultVal] - Default value in case given type is invalid.
  * @desc Gets the type name of a Function, Object/Class or String, or defaultVal if given type is invalid.
  * @returns {String}
  */
@@ -98,5 +93,9 @@ export function getTypeToString(type, defaultVal) {
         return type;
     }
 
-    return toString(type);
+    if (Check.function(type)) {
+        return funcToString(type);
+    }
+
+    return objToString(type);
 }

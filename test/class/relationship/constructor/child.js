@@ -16,6 +16,6 @@ export default class Child extends Parent {
     }
 
     toString() {
-        return 'Child';
+        return 'MyChild';
     }
 }

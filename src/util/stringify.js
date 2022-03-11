@@ -1,7 +1,5 @@
 /* eslint-disable no-control-regex, no-misleading-character-class, no-case-declarations */
-
-import { getArticle } from './getArticle';
-import { getTypeName } from './getTypeName';
+import { getTypeToString } from './getTypeToString';
 
 /**
  * @note Our custom stringify method replaces JSON.stringify to produce strings according to our type-checking error message style.
@@ -111,14 +109,14 @@ function strVal(value, maxNodes = 0) {
             return String(value);
 
         case 'function':
-            return getTypeName(value) || `${getArticle(value)}Function`;
+            return getTypeToString(value);
 
         case 'object':
             if (value == null) {
                 return 'null';
             }
 
-            switch (value.constructor.name) {
+            switch (value.constructor?.name) {
                 case 'Date':
                     return value.toISOString();
 
@@ -134,12 +132,18 @@ function strVal(value, maxNodes = 0) {
                     return parseString(value.valueOf());
 
                 default:
-                    // special types of objects
-                    const toString = `${value.valueOf()}`;
+                    // special types of objects or objects without a contructor
+                    try {
+                        if (typeof value.toString === 'function') {
+                            const strValue = value.toString();
 
-                    if (toString.indexOf('[object') === -1) {
-                        return toString;
-                    }
+                            if (strValue !== '' && strValue.indexOf('[object') === -1) {
+                                return strValue;
+                            }
+                        }
+
+                        return objectify(value, maxNodes);
+                    } catch {}
 
                     return '';
             }
@@ -160,8 +164,8 @@ function str(key, holder, maxNodes = 0) {
 }
 
 /**
- * @param {*} value Any value.
- * @param {Number} [maxNodes=2] Max number of nodes to stringify.
+ * @param {*} value - Any value.
+ * @param {Number} [maxNodes=2] - Max number of nodes to stringify.
  * @desc Stringify any value.
  * @returns {String} Value stringified.
  */

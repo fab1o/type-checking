@@ -12,7 +12,7 @@ describe('parent param name versus child param name', () => {
                 },
                 ['Fabio', { name: null }]
             );
-        }).toThrow('{name, { name }} friend.name expected a Number but received null.');
+        }).toThrow('{name, {name}} friend.name expected a Number but received null.');
     });
 
     it('throw an error - object after', () => {
@@ -26,6 +26,6 @@ describe('parent param name versus child param name', () => {
                 },
                 [{ name: 1 }, null]
             );
-        }).toThrow('{{ name }, name} name expected a String but received null.');
+        }).toThrow('{{name}, name} name expected a String but received null.');
     });
 });

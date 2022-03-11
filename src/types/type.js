@@ -1,3 +1,5 @@
+import { stringify } from '../util/stringify';
+
 /**
  * @desc TypeChecking.Type - used to validate params.
  */
@@ -20,7 +22,7 @@ export class Type {
     //  * @param {Object} [options.andAsserts] - Asserts for type.and combination.
      * @param {'or'|'and'} [options.operator] - Operator for a combinatory type.
      * @param {Function} [options.validateCreator=()=>false] - A validate creator function.
-     * @param {Function} [options.stringify=(x)=>String(x)] - A stringify function for the expected arguments.
+     * @param {Function} [options.stringifyArgs=(x)=>stringify(x)] - A stringify function for the expected arguments.
      */
     constructor(name, options = {}) {
         const {
@@ -39,7 +41,7 @@ export class Type {
             // andAsserts, ***
             operator,
             validateCreator = () => false,
-            stringify = (x) => String(x)
+            stringifyArgs = (x) => stringify(x)
         } = options ?? {};
 
         this.name = name;
@@ -73,7 +75,7 @@ export class Type {
         this.autoDisplayArgs = !!autoDisplayArgs;
         this.operator = operator;
         this.validateCreator = validateCreator;
-        this.stringify = stringify;
+        this.stringifyArgs = stringifyArgs;
 
         // this.or = { ***
         //     asserts: orAsserts
@@ -127,19 +129,21 @@ export class Type {
 
         if (/{[a-k]}/.test(typeName)) {
             // a max of 6 arguments are supported for user defined template
-            ['a', 'b', 'c', 'd', 'e', 'f'].forEach((letter, i) => {
-                const arg = args[i];
+            ['a', 'b', 'c', 'd', 'e', 'f'].forEach((letter, index) => {
+                const arg = args[index];
 
                 if (arg !== undefined) {
+                    const argName = this.stringifyArgs(arg);
+
                     typeName = typeName
-                        .replace(new RegExp(`{${letter}}`, 'i'), this.stringify(arg))
+                        .replace(new RegExp(`{${letter}}`, 'i'), argName)
                         .trim();
                 } else {
                     typeName = typeName.replace(new RegExp(`{${letter}}`, 'i'), '').trim();
                 }
             });
         } else if (this.autoDisplayArgs && args.length > 0) {
-            const argNames = args.map((arg) => `${this.stringify(arg)}`).join();
+            const argNames = args.map((arg) => `${this.stringifyArgs(arg)}`).join();
 
             typeName += `: ${argNames}`;
         }

@@ -30,10 +30,10 @@ export function objectValidateCreator(type, objParams = null) {
 
             if (isArray) {
                 value.forEach((val) =>
-                    typeChecker.execute({ objParams, parent, input: val })
+                    typeChecker.execute({ objParams, parent, userData: val })
                 );
             } else {
-                typeChecker.execute({ objParams, parent, input: value });
+                typeChecker.execute({ objParams, parent, userData: value });
             }
         }
     }

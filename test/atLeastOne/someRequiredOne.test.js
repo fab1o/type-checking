@@ -71,7 +71,7 @@ describe('someRequiredOne', () => {
                 dob: new Date()
             });
         }).toThrow(
-            'funcSomeRequiredOneWithOptions({ name, year }) at least one parameter must be provided.'
+            'funcSomeRequiredOneWithOptions({name, year}) at least one parameter must be provided.'
         );
     });
 
@@ -82,7 +82,7 @@ describe('someRequiredOne', () => {
                 year: 2020
             });
         }).toThrow(
-            'funcSomeRequiredOneWithOptions({ name, year, dob }) options.dob expected a Date or null or undefined but received a Number: 1.'
+            'funcSomeRequiredOneWithOptions({name, year, dob}) options.dob expected a Date or null or undefined but received a Number: 1.'
         );
     });
 });

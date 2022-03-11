@@ -698,7 +698,7 @@ createAccount();
 // error: "addAccount(options) options expected an Object but received undefined."
 
 createAccount({});
-// error: "addAccount({ id, name }) options.id expected a Number but received undefined."
+// error: "addAccount({id, name}) options.id expected a Number but received undefined."
 ```
 
 ### Advantages of Named Arguments
@@ -781,7 +781,7 @@ typecheck(params, data);
 
 _This feature is not implemented._
 
-An user-defined type is an alternative to `Types.custom` for a custom type that is more commonly used. [Here is a scenario](https://github.bamtech.co/fed-packages/dss-type-checking/issues/14) where a user-defined type is a good candidate.
+An user-defined type is an alternative to `Types.custom` for a custom type that is more commonly used.
 
 An user-defined type is also available in `Types`, just like any other native type.
 
@@ -803,13 +803,14 @@ addType(name, validator, [options]);
 -   `name` - **String** is the name of the type.
 -   `validator` - **Function**: `function(value: *, [...args]: Array): boolean;`
     -   `value` - the data being validated for a param using this type.
-    -   `args` - optional **Array** of the extra arguments provided by you to the type.
--   `options` - optional **Object** with:
-    -   `singular` - optional **String**. Default: `name`.
-    -   `plural` - optional **String**. Default: `name + "s"`.
-    -   `expectArgs` - optional **Boolean**. Default: `false`. Whether or not type receive arguments.
-    -   `autoDisplayArgs` - optional **Boolean**. Default: `true`. Whether or not automatically display arguments.
-    -   `stringify` - optional **Function** to custom stringify the arguments of the type, in case there is one.
+    -   `userArguments` - optional: **Array/Object** all the user data (the `arguments` argument of the typecheck call)
+    -   `...args` - optional: **Array** of the extra arguments provided by you to the type.
+-   `options` - optional: **Object** with:
+    -   `singular` - optional: **String**. Default: `name`.
+    -   `plural` - optional: **String**. Default: `name + "s"`.
+    -   `expectArgs` - optional: **Boolean**. Default: `false`. Whether or not type receive arguments.
+    -   `autoDisplayArgs` - optional: **Boolean**. Default: `true`. Whether or not automatically display arguments.
+    -   `stringifyArgs` - optional: **Function** to stringify the expected arguments of the type, in case there is one.
 
 Throws `TypeError` when a parameter is invalid.
 
@@ -1005,46 +1006,178 @@ Types.custom(validator, [errorMessage], [...args]);
 
 -   `validator` - **Function**: `function(value: any, [...args]: Array): Boolean;`
     -   `value` - the data being validated for a param using this type.
-    -   `args` - optional **Array** of the extra arguments provided by you to the type.
--   `errorMessage` - optional **String** of what is expected from this type.
--   `args` - optional extra arguments.
+    -   `userArguments` - optional: **Array/Object** all the user data (the `arguments` argument of the typecheck call)
+    -   `...args` - optional: **Array** of the extra arguments provided by you to the type.
+-   `errorMessage` - optional: **String** of what is expected from this type.
+-   `...args` - optional: extra arguments to provide to the `validator` function.
 
 **Example:**
 
-A function that throws an Error if the given value is not a prime Number and, as an example of how we can use extra arguments, between 1 and 100 (passed as arguments to the type).
+A function that validates if the given value is a prime Number.
 
 ```js
 function isPrime(num) {
-    function validator(value, ...args) {
+    function validator(value) {
         if (value <= 1) {
             return false;
         }
-        for (let i = 2; i < value; i++) {
-            if (value % i === 0 && value > 10) {
+
+        const sq = Math.sqrt(value);
+
+        for (let i = 2; i < sq; i++) {
+            if (value % i === 0) {
                 return false;
             }
         }
 
-        // example of how we can use extra arguments
-        const min = args[0];
-        const max = args[1];
-
-        if (value > min && value < max) {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     const params = {
-        num: Types.custom(validator, 'a prime Number', 1, 100)
+        num: Types.custom(validator, 'a prime Number')
     };
 
     typecheck(isPrime, params, arguments);
 }
 
-isPrime(66);
-// error: "isPrime(num) num expected a prime Number but received a Number: 66."
+isPrime(6);
+// error: "isPrime(num) num expected a prime Number but received a Number: 6."
+
+isPrime(7);
+// success: 7 is a prime number
+```
+
+**Example using extra args:**
+
+A function that validates if the given value is a prime Number and between two numbers: 1 and 6.
+
+```js
+function isPrime(num) {
+    function validator(value, userArguments, min, max) {
+        if (value <= 1) {
+            return false;
+        }
+
+        const sq = Math.sqrt(value);
+
+        for (let i = 2; i < sq; i++) {
+            if (value % i === 0) {
+                return false;
+            }
+        }
+
+        if (value < min || value > max) {
+            return false;
+        }
+
+        return true;
+    }
+
+    const params = {
+        num: Types.custom(validator, 'a prime Number and between 1 and 6', 1, 6)
+    };
+
+    typecheck(isPrime, params, arguments);
+}
+
+isPrime(7);
+// error: "isPrime(num) num expected a prime Number and between 1 and 6 but received a Number: 7."
+
+isPrime(3);
+// success
+```
+
+**Example using user arguments**
+
+A function that validates if the given value is a prime Number and between two numbers that are given.
+
+```js
+function isPrime(num) {
+    function validator(value, userArguments) {
+        if (value <= 1) {
+            return false;
+        }
+
+        const sq = Math.sqrt(value);
+
+        for (let i = 2; i < sq; i++) {
+            if (value % i === 0) {
+                return false;
+            }
+        }
+
+        const min = userArguments[1]; // index is 1 cos min is the second argument
+        const max = userArguments[2]; // index is 2 cos max is the third argument
+
+        if (value < min || value > max) {
+            return false;
+        }
+
+        return true;
+    }
+
+    const params = {
+        num: Types.custom(validator, 'a prime Number between min and max'),
+        min: Types.number,
+        max: Types.number
+    };
+
+    typecheck(isPrime, params, arguments);
+}
+
+isPrime(7, 1, 6);
+// error: "isPrime(num, min, max) num expected a prime Number between min and max but received a Number: 7."
+
+isPrime(7, 1, 8);
+// success
+```
+
+**Example using user arguments with object param**
+
+A function that validates if the given value is a prime Number and between two numbers that are given.
+
+```js
+function isPrime(num) {
+    function validator(value, userArguments) {
+        if (value <= 1) {
+            return false;
+        }
+
+        const sq = Math.sqrt(value);
+
+        for (let i = 2; i < sq; i++) {
+            if (value % i === 0) {
+                return false;
+            }
+        }
+
+        const opts = userArguments[0]; // index is 0 cos opts is the first argument
+
+        const { min, max } = opts;
+
+        if (value < min || value > max) {
+            return false;
+        }
+
+        return true;
+    }
+
+    const params = {
+        opts: Types.object({
+            num: Types.custom(validator, 'a prime Number between min and max'),
+            min: Types.number,
+            max: Types.number
+        })
+    };
+
+    typecheck(isPrime, params, arguments);
+}
+
+isPrime({ num: 7, min: 1, max: 6 });
+// error: "isPrime({num, min, max}) opts.num expected a prime Number between min and max but received a Number: 7."
+
+isPrime({ num: 7, min: 1, max: 8 });
+// success
 ```
 
 ## Best Practices

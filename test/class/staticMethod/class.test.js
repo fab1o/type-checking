@@ -4,10 +4,10 @@ describe('Class method', () => {
     it('throw an error', () => {
         expect(() => {
             Class.method({
-                name: null
+                code: null
             });
         }).toThrow(
-            'Class.method({ name, code, isActive }) options.name expected a String but received null.'
+            'MyClass.method({code, isActive}) options.code expected a Number but received null.'
         );
     });
 });

@@ -10,6 +10,6 @@ export default class Parent {
     }
 
     toString() {
-        return 'Parent';
+        return 'MyParent';
     }
 }

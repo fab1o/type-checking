@@ -11,7 +11,15 @@ export default class Parent {
         typecheck(this, this.method, params, arguments);
     }
 
+    expected() {
+        const params = {
+            date: Types.instanceStrict(Number)
+        };
+
+        typecheck(this, this.expected, params, arguments);
+    }
+
     toString() {
-        return 'Parent';
+        return 'MyParent';
     }
 }

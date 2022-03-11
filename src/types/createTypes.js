@@ -26,8 +26,8 @@ import { Type } from './type';
  * @param {Boolean} isArray
 //  * @param {Object} [options]
 //  * @param {Object} [options.asserts=Asserts] - Asserts object.
-//  * @param {Boolean} [options.exitArrayLoop=false] - Flag used to prevent 3 levels of Types.array.of.Types.
-//  * @param {String} [options.arrayOfType=null] - "array" or "nonEmptyArray".
+//  * @param {Boolean} [options.exitArrayLoop=false] - Flag used to prevent 3 levels: Types.array.of.Types.array.of.Types
+//  * @param {'array'|'nonEmptyArray'} [options.arrayOfType=null]
  * @desc Creates Types object.
  * @returns {Object} Types object.
  */

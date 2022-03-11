@@ -21,7 +21,7 @@ describe('param enclosed', () => {
         expect(() => {
             objectEnclosedByArray([{}]);
         }).toThrow(
-            'objectEnclosedByArray([{ name }]) objs.name expected a String but received undefined.'
+            'objectEnclosedByArray([{name}]) objs.name expected a String but received undefined.'
         );
     });
 
@@ -33,7 +33,7 @@ describe('param enclosed', () => {
                 }
             ]);
         }).toThrow(
-            'objectEnclosedByArray([{ name }]) objs.name expected a String but received null.'
+            'objectEnclosedByArray([{name}]) objs.name expected a String but received null.'
         );
     });
 });

@@ -6,7 +6,7 @@ import Check from '@fab1o/check-types';
  * @property {Object|String} object Instance of a class, object or name.
  * @property {Function|String} method Function or function name.
  * @property {Object<TypeChecking.Type>} c Params built with Types.
- * @property {Array|Object} d User input (arguments).
+ * @property {Array|Object} d User arguments.
  * @property {Error} e The Error type to throw.
  *
  */
@@ -23,20 +23,20 @@ import Check from '@fab1o/check-types';
 
 /**
  *
- * @param {Array} args User input (arguments).
+ * @param {Array} args Typecheck arguments.
  * @param {String} [methodName='typecheck'] Method name to be used in the signature.
- * @desc Transforms user input into a distinct Object.
+ * @desc Transforms user userArguments into a distinct Object.
  * @returns {TypeCheckArgs|TypeCheckIfArgs} An object like {signature, object, method, c, d, ErrorType}.
  */
 export function composeOverloading(args, methodName = 'typecheck') {
-    let object, method, params, input, ErrorType;
+    let object, method, params, userArguments, ErrorType;
 
     const signature = `${methodName}(...)`;
 
     switch (args.length) {
         case 5:
             // typecheck(object, method, params, arguments, ErrorType)
-            [object, method, params, input, ErrorType] = args;
+            [object, method, params, userArguments, ErrorType] = args;
 
             break;
 
@@ -44,14 +44,14 @@ export function composeOverloading(args, methodName = 'typecheck') {
             if (Check.inheritance(args[3], Error)) {
                 if (Check.function(args[0]) || Check.string(args[0])) {
                     // typecheck(function, params, arguments, ErrorType)
-                    [method, params, input, ErrorType] = args;
+                    [method, params, userArguments, ErrorType] = args;
                 } else {
                     // typecheck(object, params, arguments, ErrorType)
-                    [object, params, input, ErrorType] = args;
+                    [object, params, userArguments, ErrorType] = args;
                 }
             } else {
                 // typecheck(object, method, params, arguments)
-                [object, method, params, input] = args;
+                [object, method, params, userArguments] = args;
             }
 
             break;
@@ -59,20 +59,20 @@ export function composeOverloading(args, methodName = 'typecheck') {
         case 3:
             if (Check.inheritance(args[2], Error)) {
                 // typecheck(params, arguments, ErrorType)
-                [params, input, ErrorType] = args;
+                [params, userArguments, ErrorType] = args;
             } else if (Check.function(args[0]) || Check.string(args[0])) {
                 // typecheck(function, params, arguments)
-                [method, params, input] = args;
+                [method, params, userArguments] = args;
             } else {
                 // typecheck(object, params, arguments)
-                [object, params, input] = args;
+                [object, params, userArguments] = args;
             }
 
             break;
 
         case 2:
             // typecheck(params, arguments)
-            [params, input] = args;
+            [params, userArguments] = args;
 
             break;
 
@@ -87,7 +87,7 @@ export function composeOverloading(args, methodName = 'typecheck') {
         object,
         method,
         c: params,
-        d: input,
+        d: userArguments,
         ErrorType
     };
 }

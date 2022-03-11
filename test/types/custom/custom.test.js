@@ -1,7 +1,42 @@
-import { Config, Types, typecheck } from '../../../src';
+import { Check, Config, Types, typecheck } from '../../../src';
 
 describe('Types.custom()', () => {
-    it('an Error is not thrown when custom is optional.', () => {
+    it('type name to be correct', () => {
+        expect(Types.custom().typeName).toBe('custom');
+    });
+
+    it('does not thrown when custom.', () => {
+        expect(() => {
+            const LikeObject = {
+                variantId: '',
+                version: 0,
+                featureId: ''
+            };
+
+            typecheck(
+                {
+                    options: Types.object({
+                        experiments: Types.custom((value) =>
+                            Object.values(value).every((v) => Check.like(v, LikeObject))
+                        )
+                    })
+                },
+                [
+                    {
+                        experiments: Object.create(null, {
+                            '50365f0d&&test_demo': {
+                                variantId: 'control',
+                                version: 1,
+                                featureId: '50365f0d&&test_demo'
+                            }
+                        })
+                    }
+                ]
+            );
+        }).not.toThrow();
+    });
+
+    it('does not thrown when custom is optional.', () => {
         expect(() => {
             typecheck(
                 {
@@ -34,9 +69,9 @@ describe('Types.custom()', () => {
         }).toThrow('typecheck(...) params expected an Object built with Types.');
     });
 
-    it.skip('throw error when validator throws an error', () => {
+    it('throw error when validator throws an error', () => {
         const myLogger = {
-            log(message, ex) {
+            warn(message, ex) {
                 this.message = ex.message;
             }
         };
@@ -86,5 +121,42 @@ describe('Types.custom()', () => {
 
         expect(myLogger.logMessage).toBe('My Error');
         expect(myLogger.warnMessage).toBe('{c} c expected custom but received null.');
+    });
+
+    it('does not throw error for a very customized type using userArguments', () => {
+        expect(() => {
+            const aValidator = (a, userArguments) => {
+                const { b } = userArguments[0];
+
+                const both = Check.assigned(b) && Check.nonEmptyString(a);
+                const neither = Check.not.assigned(b) && Check.not.assigned(a);
+
+                return both || neither;
+            };
+
+            const bValidator = (b, userArguments) => {
+                const { a } = userArguments[0];
+
+                const both = Check.assigned(a) && Check.greaterOrEqual(b, 0);
+                const neither = Check.not.assigned(a) && Check.not.assigned(b);
+
+                return both || neither;
+            };
+
+            typecheck(
+                {
+                    options: Types.object({
+                        a: Types.custom(aValidator, 'a non-empty String if b is provided'),
+                        b: Types.custom(bValidator, 'a value greater than 0 if a is provided')
+                    })
+                },
+                [
+                    {
+                        a: 'string',
+                        b: 2
+                    }
+                ]
+            );
+        }).not.toThrow();
     });
 });

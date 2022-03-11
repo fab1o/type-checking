@@ -10,8 +10,8 @@ import { Params } from './params';
 export class MethodSignature {
     /**
      * @param {Object} options
-     * @param {Object|String} [options.object=null] - Class instance or object.
-     * @param {Function|String} [options.method=null] - Method of the class or a function.
+     * @param {Object|String} [options.object=null] - Class instance or object (or name as String).
+     * @param {Function|String} [options.method=null] - Method of a class or Class constructor or function (or name as String).
      * @param {Object<TypeChecking.Type>} [options.objParams=null] - Object built with Types.
      * @param {Boolean} [options.displayBrackets=false] - Whether or not to display brackets "{ }" for an object input.
      */
@@ -23,10 +23,11 @@ export class MethodSignature {
             displayBrackets = false
         } = options;
 
-        this.setName(object, method);
-
         // Whether or not it should add three dots to the list of param names to represent that it inherits more params.
         const displayEtcetera = hasSuperclass(object);
+
+        this.object = object;
+        this.method = method;
 
         this.params = new Params(objParams, {
             displayEtcetera,
@@ -35,15 +36,12 @@ export class MethodSignature {
     }
 
     /**
-     * @param {Object|String} [object=null] - Class instance or object.
-     * @param {Function|String} [method=null] - Method of the class or a function.
-     * @desc Sets the method signature name.
+     * @desc Gets the method signature name.
+     * @returns {String} The "Object.method..." part of the message.
      */
-    setName(object, method) {
-        // const objectName = getTypeName(object, '');
-        // const methodName = getTypeName(method, '');
-        const objectName = getTypeToString(object, '');
-        const methodName = getTypeToString(method, '');
+    get name() {
+        const objectName = getTypeToString(this.object, '');
+        const methodName = getTypeToString(this.method, '');
 
         let dot;
 
@@ -53,15 +51,7 @@ export class MethodSignature {
             dot = '';
         }
 
-        this._name = `${objectName}${dot}${methodName}`;
-    }
-
-    /**
-     * @desc Gets the method signature name.
-     * @returns {String} The "Object.method..." part of the message.
-     */
-    get name() {
-        return this._name;
+        return `${objectName}${dot}${methodName}`;
     }
 
     /**

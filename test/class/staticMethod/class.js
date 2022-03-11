@@ -4,7 +4,6 @@ export default class Class {
     static method() {
         const params = {
             options: Types.object({
-                name: Types.string,
                 code: Types.number,
                 isActive: Types.boolean
             })
@@ -14,6 +13,6 @@ export default class Class {
     }
 
     toString() {
-        return 'Class';
+        return 'MyClass';
     }
 }

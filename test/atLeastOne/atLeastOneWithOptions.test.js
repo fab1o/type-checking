@@ -70,7 +70,7 @@ describe('typecheck.atLeastOne with Options object', () => {
                 opts: {}
             });
         }).toThrow(
-            'addPerson({ name, year, { name, year } }) at least one parameter must be provided.'
+            'addPerson({name, year, {name, year}}) at least one parameter must be provided.'
         );
     });
 });

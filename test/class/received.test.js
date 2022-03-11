@@ -11,6 +11,6 @@ describe('Received type for a class constructor', () => {
                 },
                 [Parent]
             );
-        }).toThrow('{ok} ok expected a Boolean but received Parent.');
+        }).toThrow('{ok} ok expected a Boolean but received MyParent.');
     });
 });

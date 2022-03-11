@@ -44,7 +44,7 @@ describe('function using object as argument for input', () => {
                 name: null
             });
         }).toThrow(
-            'createAccountWithOptions({ name, isActive }) options.name expected a String but received null.'
+            'createAccountWithOptions({name, isActive}) options.name expected a String but received null.'
         );
     });
 

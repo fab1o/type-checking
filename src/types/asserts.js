@@ -4,7 +4,7 @@ import {
     objectValidateCreator,
     skipValidateCreator
 } from '../validateCreator';
-import { getArgumentValueName, getTypeName, stringifyKeys, stringifyValues } from '../util';
+import { getTypeToString, stringifyKeys, stringifyValues } from '../util';
 
 import { arrayBufferViewValidator, dateStringValidator } from './validator';
 
@@ -20,16 +20,14 @@ export const Asserts = [
         plural: 'arrays',
         expectArgs: false,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
     },
-    // arrayLike{
-    //     arrayLike: 'array',
+    // {
+    //     assertName: 'arrayLike',
     //     singular: 'an Array-like',
     //     plural: 'arrays-like',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
     {
@@ -38,7 +36,6 @@ export const Asserts = [
         plural: 'arrayBufferViews',
         expectArgs: false,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator,
         validator: arrayBufferViewValidator
         // , orAsserts: ['nonEmptyString']
@@ -49,16 +46,14 @@ export const Asserts = [
         plural: 'assigned values',
         expectArgs: false,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
     },
-    // between{
-    //     arrayLike: 'between',
+    // {
+    //     assertName: 'between',
     //     singular: 'a Number between {a} and {b}',
     //     plural: 'numbers between {a} and {b}',
     //     expectArgs: true,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
     {
@@ -67,14 +62,12 @@ export const Asserts = [
         plural: 'booleans',
         expectArgs: false,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
     },
     {
         assertName: 'custom',
         expectArgs: true,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: customValidateCreator
     },
     {
@@ -83,7 +76,6 @@ export const Asserts = [
         plural: 'dates',
         expectArgs: false,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
     },
     {
@@ -92,62 +84,56 @@ export const Asserts = [
         plural: 'strings in ISO date format',
         expectArgs: false,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator,
         validator: dateStringValidator
     },
-    // emptyArray{
-    //     arrayLike: 'emptyArray',
+    // {
+    //     assertName: 'emptyArray',
     //     singular: 'an empty Array',
     //     plural: 'empty arrays',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
-    // emptyObject{
-    //     arrayLike: 'emptyObject',
+    // {
+    //     assertName: 'emptyObject',
     //     singular: 'an empty Object',
     //     plural: 'empty objects',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
-    // emptyString{
-    //     arrayLike: 'emptyString',
+    // {
+    //     assertName: 'emptyString',
     //     singular: 'an empty String',
     //     plural: 'empty strings',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
-    // equal{
-    //     arrayLike: 'equal',
+    // {
+    //     assertName: 'equal',
     //     singular: '{a}',
     //     plural: '{a}',
     //     expectArgs: true,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
+    //     stringifyArgs: getTypeToString,
     //     validateCreator: genericValidateCreator
     // },
     // even{
-    //     arrayLike: 'even',
+    //     assertName: 'even',
     //     singular: 'an even Number',
     //     plural: 'even numbers',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
-    // float{
-    //     arrayLike: 'float',
+    // {
+    //     assertName: 'float',
     //     singular: 'a float Number',
     //     plural: 'float numbers',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
     {
@@ -156,25 +142,22 @@ export const Asserts = [
         plural: 'functions',
         expectArgs: false,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
     },
-    // hasLength{
-    //     arrayLike: 'hasLength',
+    // {
+    //     assertName: 'hasLength',
     //     singular: 'that has length of {a}',
     //     plural: 'data with length of {a}',
     //     expectArgs: true,
     //     isArrayable: false,
-    //     validateCreator: genericValidateCreator,
-    //     stringify: getArgumentValueName
+    //     validateCreator: genericValidateCreator
     // },
-    // greater{
-    //     arrayLike: 'greater',
+    // {
+    //     assertName: 'greater',
     //     singular: 'a Number greater than {a}',
     //     plural: 'numbers greater than {a}',
     //     expectArgs: true,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
     {
@@ -183,7 +166,6 @@ export const Asserts = [
         plural: 'numbers greater or equal to {a}',
         expectArgs: true,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
     },
     {
@@ -192,8 +174,8 @@ export const Asserts = [
         plural: 'one of [{a}]',
         expectArgs: true,
         isArrayable: true,
-        validateCreator: genericValidateCreator,
-        stringify: stringifyValues
+        stringifyArgs: stringifyValues,
+        validateCreator: genericValidateCreator
         // , orAsserts: ['nonEmptyString', 'string']
     },
     {
@@ -203,25 +185,24 @@ export const Asserts = [
         plural: 'types that inherit from {a}',
         expectArgs: true,
         isArrayable: true,
-        validateCreator: genericValidateCreator,
-        stringify: getTypeName
+        stringifyArgs: getTypeToString,
+        validateCreator: genericValidateCreator
     },
-    // inRange{
-    //     arrayLike: 'inRange',
+    // {
+    //     assertName: 'inRange',
     //     singular: 'a Number in the range {a} to {b}',
     //     plural: 'numbers in the range {a} to {b}',
     //     expectArgs: true,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
-    // instance{
-    //     arrayLike: 'instance',
+    // {
+    //     assertName: 'instance',
     //     singular: 'an instance of {a}',
     //     plural: 'instances of {a}',
     //     expectArgs: true,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
+    //     stringifyArgs: getTypeToString,
     //     validateCreator: genericValidateCreator
     // },
     {
@@ -230,7 +211,7 @@ export const Asserts = [
         plural: 'instances of {a}',
         expectArgs: true,
         isArrayable: true,
-        stringify: getTypeName,
+        stringifyArgs: getTypeToString,
         validateCreator: genericValidateCreator
         // , orAsserts: ['object']
     },
@@ -240,17 +221,15 @@ export const Asserts = [
         plural: 'integers',
         expectArgs: false,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
         // , andAsserts: ['positive']
     },
-    // iterable{
-    //     arrayLike: 'iterable',
+    // {
+    //     assertName: 'iterable',
     //     singular: 'an iterable object',
     //     plural: 'iterable objects',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
     {
@@ -259,25 +238,23 @@ export const Asserts = [
         plural: 'as keys in [{a}]',
         expectArgs: true,
         isArrayable: false,
-        stringify: stringifyKeys,
+        stringifyArgs: stringifyKeys,
         validateCreator: genericValidateCreator
     },
-    // less{
-    //     arrayLike: 'less',
+    // {
+    //     assertName: 'less',
     //     singular: 'a Number less than {a}',
     //     plural: 'numbers less than {a}',
     //     expectArgs: true,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
-    // lessOrEqual{
-    //     arrayLike: 'lessOrEqual',
+    // {
+    //     assertName: 'lessOrEqual',
     //     singular: 'a Number less or equal to {a}',
     //     plural: 'Numbers less or equal to {a}',
     //     expectArgs: true,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
     {
@@ -286,34 +263,32 @@ export const Asserts = [
         plural: 'objects that match {{a}}',
         expectArgs: true,
         isArrayable: false,
-        stringify: stringifyKeys,
+        stringifyArgs: stringifyKeys,
         validateCreator: genericValidateCreator
     },
-    // match{
-    //     arrayLike: 'match',
+    // {
+    //     assertName: 'match',
     //     singular: 'a String that matches /{a}/',
     //     plural: 'strings that match /{a}/',
     //     expectArgs: true,
     //     isArrayable: false,
-    //     stringify: stringifyValues,
+    //     stringifyArgs: stringifyValues,
     //     validateCreator: genericValidateCreator
     // },
-    // nan{
-    //     arrayLike: 'nan',
+    // {
+    //     assertName: 'nan',
     //     singular: 'NaN',
     //     plural: 'NaN',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
-    // negative{
-    //     arrayLike: 'negative',
+    // {
+    //     assertName: 'negative',
     //     singular: 'a Number lower than 0',
     //     plural: 'numbers lower than 0',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
     // {
@@ -322,7 +297,6 @@ export const Asserts = [
     //     plural: 'non-empty arrays',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
     {
@@ -331,7 +305,6 @@ export const Asserts = [
         plural: 'non-empty objects',
         expectArgs: false,
         isArrayable: true,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
     },
     {
@@ -340,16 +313,14 @@ export const Asserts = [
         plural: 'non-empty strings',
         expectArgs: false,
         isArrayable: true,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
     },
-    // null{
-    //     arrayLike: 'null',
+    // {
+    //     assertName: 'null',
     //     singular: 'null',
     //     plural: 'null',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
     {
@@ -358,7 +329,6 @@ export const Asserts = [
         plural: 'numbers',
         expectArgs: false,
         isArrayable: true,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
     },
     {
@@ -367,16 +337,14 @@ export const Asserts = [
         plural: 'objects',
         expectArgs: true,
         isArrayable: true,
-        stringify: getArgumentValueName,
         validateCreator: objectValidateCreator
     },
-    // odd{
-    //     arrayLike: 'odd',
+    // {
+    //     assertName: 'odd',
     //     singular: 'an odd Number',
     //     plural: 'odd numbers',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
     {
@@ -385,7 +353,6 @@ export const Asserts = [
         plural: 'numbers greater than 0',
         expectArgs: false,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
     },
     {
@@ -394,7 +361,6 @@ export const Asserts = [
         expectArgs: false,
         isExtensible: false,
         isArrayable: false,
-        stringify: getArgumentValueName,
         validateCreator: skipValidateCreator
     },
     {
@@ -403,26 +369,23 @@ export const Asserts = [
         plural: 'strings',
         expectArgs: false,
         isArrayable: true,
-        stringify: getArgumentValueName,
         validateCreator: genericValidateCreator
     }
     // ,
-    // thenable{
-    //     arrayLike: 'thenable',
+    // {
+    //     assertName: 'thenable',
     //     singular: 'a Promise',
     //     plural: 'promises',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // },
-    // undefined{
-    //     arrayLike: 'undefined',
+    // {
+    //     assertName: 'undefined',
     //     singular: 'undefined',
     //     plural: 'undefined',
     //     expectArgs: false,
     //     isArrayable: false,
-    //     stringify: getArgumentValueName,
     //     validateCreator: genericValidateCreator
     // }
 ];

@@ -1,9 +1,9 @@
-import { getTypeName } from '../../src/util';
+import { getTypeToString } from '../../src/util';
 
-describe('getTypeName', () => {
+describe('getTypeToString', () => {
     it('function definition with native name', () => {
         function func() {}
-        const value = getTypeName(func);
+        const value = getTypeToString(func);
 
         expect(value).toBe(func.name);
         expect(value).toBe('func');
@@ -11,7 +11,7 @@ describe('getTypeName', () => {
 
     it('function variable with native name', () => {
         const funcVar = function () {};
-        const value = getTypeName(funcVar);
+        const value = getTypeToString(funcVar);
 
         expect(value).toBe(funcVar.name);
         expect(value).toBe('funcVar');
@@ -19,14 +19,14 @@ describe('getTypeName', () => {
 
     it('function variable using arrow with native name', () => {
         const funcArrow = () => {};
-        const value = getTypeName(funcArrow);
+        const value = getTypeToString(funcArrow);
 
         expect(value).toBe(funcArrow.name);
         expect(value).toBe('funcArrow');
     });
 
     it('anonymous functions have no name', () => {
-        const value = getTypeName(() => {});
+        const value = getTypeToString(() => {});
 
         expect(value).toBe('a Function');
     });
@@ -36,7 +36,7 @@ describe('getTypeName', () => {
 
         Object.defineProperty(func, 'name', { value: 'myCustomName', writable: true });
 
-        const value = getTypeName(func);
+        const value = getTypeToString(func);
 
         expect(value).toBe(func.name);
         expect(value).toBe('myCustomName');
@@ -45,13 +45,13 @@ describe('getTypeName', () => {
     it('class definition with native toString and name (nothing edited)', () => {
         class Account {}
 
-        const className = getTypeName(Account);
+        const className = getTypeToString(Account);
 
         expect(className).toBe(Account.name);
         expect(className).toBe('Account');
 
         const account = new Account();
-        const instanceName = getTypeName(account);
+        const instanceName = getTypeToString(account);
 
         expect(instanceName).toBe(Account.name);
     });
@@ -65,14 +65,14 @@ describe('getTypeName', () => {
 
         // Config.nameMethodPriority = Config.NameMethod.toString;
 
-        const className = getTypeName(Account);
+        const className = getTypeToString(Account);
 
-        expect(className).toBe(Account.name);
+        expect(className).toBe(Account.prototype.toString());
 
         const account = new Account();
-        const instanceName = getTypeName(account);
+        const instanceName = getTypeToString(account);
 
-        expect(instanceName).toBe(instanceName);
+        expect(instanceName).toBe(instanceName.toString());
     });
 
     it('class definition with custom (edited) name', () => {
@@ -82,7 +82,7 @@ describe('getTypeName', () => {
             }
         }
 
-        const value = getTypeName(Account);
+        const value = getTypeToString(Account);
 
         expect(value).toBe(Account.name);
     });
@@ -98,56 +98,15 @@ describe('getTypeName', () => {
             }
         }
 
-        let className, instanceName;
+        const className = getTypeToString(Account);
 
-        // Config.nameMethodPriority = Config.NameMethod.toString;
-
-        // className = getTypeName(Account);
-
-        // // instance toString() has priority over static name as per Config set
-        // expect(className).toBe(Account.prototype.toString());
-
-        // account = new Account();
-        // instanceName = getTypeName(account);
-
-        // expect(instanceName).toBe(account.toString());
-
-        // now, let's invert the priority in the Config to static name
-        // Config.nameMethodPriority = Config.NameMethod.name;
-
-        // and repeat the tests:
-
-        className = getTypeName(Account);
-
-        expect(className).toBe(Account.name);
-
-        const account = new Account();
-
-        instanceName = getTypeName(account);
-
-        expect(instanceName).toBe(Account.name);
-
-        // tampered objects
-
-        account.name = null;
-
-        instanceName = getTypeName(account);
-        expect(instanceName).toBe(Account.name);
-
-        delete account.name;
-
-        instanceName = getTypeName(account);
-        expect(instanceName).toBe(Account.name);
-
-        // tampered classes
-
-        delete Account.name;
-
-        className = getTypeName(Account);
+        // instance toString() has priority over static name as per Config set
         expect(className).toBe(Account.prototype.toString());
 
-        instanceName = getTypeName(account);
-        expect(instanceName).toBe(Account.prototype.toString());
+        const account = new Account();
+        const instanceName = getTypeToString(account);
+
+        expect(instanceName).toBe(account.toString());
     });
 
     it('simple objects are not instances of a class, so names are simply "Object"', () => {
@@ -155,7 +114,7 @@ describe('getTypeName', () => {
             name: 'SimpleObject'
         };
 
-        expect(getTypeName(simpleObject)).toBe('Object');
+        expect(getTypeToString(simpleObject)).toBe('Object');
     });
 
     it('tampered objects', () => {
@@ -165,60 +124,60 @@ describe('getTypeName', () => {
         obj.constructor = null;
         delete obj2.constructor;
 
-        expect(getTypeName(obj)).toBe('an Object');
-        expect(getTypeName(obj2)).toBe('Object');
+        expect(getTypeToString(obj)).toBe('an Object');
+        expect(getTypeToString(obj2)).toBe('Object');
     });
 
     it('Date', () => {
-        const output = getTypeName(Date);
+        const output = getTypeToString(Date);
 
         expect(output).toBe('Date');
     });
 
     it('Array', () => {
-        const output = getTypeName(Array);
+        const output = getTypeToString(Array);
 
         expect(output).toBe('Array');
     });
 
     it('Number', () => {
-        const output = getTypeName(Number);
+        const output = getTypeToString(Number);
 
         expect(output).toBe('Number');
     });
 
     it('String', () => {
-        const output = getTypeName(String);
+        const output = getTypeToString(String);
 
         expect(output).toBe('String');
     });
 
     it('Boolean', () => {
-        const output = getTypeName(Boolean);
+        const output = getTypeToString(Boolean);
 
         expect(output).toBe('Boolean');
     });
 
     it('NaN', () => {
-        const output = getTypeName(NaN);
+        const output = getTypeToString(NaN);
 
         expect(output).toBe('NaN');
     });
 
     it('Infinity', () => {
-        const output = getTypeName(Infinity);
+        const output = getTypeToString(Infinity);
 
-        expect(output).toBe('Number');
+        expect(output).toBe('Infinity');
     });
 
     it('null', () => {
-        const output = getTypeName(null);
+        const output = getTypeToString(null);
 
         expect(output).toBe('null');
     });
 
     it('null with default value as ""', () => {
-        const output = getTypeName(null, '');
+        const output = getTypeToString(null, '');
 
         expect(output).toBe('');
     });

@@ -9,7 +9,7 @@ export class TypeChecker {
     /**
      * @param {Object} options
      * @param {TypeChecking.MessageBuilder.MessageBuilder} options.messageBuilder - MessageBuilder object.
-     * @param {Array|Object} options.input - The user input.
+     * @param {Array|Object} options.userArguments - The user userArguments.
      * @param {Object<TypeChecking.Type>} options.objParams - Params object built with Types.
      * @param {Error} [options.ErrorType=Config.ErrorType] - The Error type to throw.
      * @param {String} [options.signature] - Typecheker's function signature.
@@ -18,7 +18,7 @@ export class TypeChecker {
     constructor(options) {
         const {
             messageBuilder,
-            input,
+            userArguments,
             objParams,
             ErrorType = Config.ErrorType,
             signature,
@@ -26,7 +26,7 @@ export class TypeChecker {
         } = options;
 
         this.messageBuilder = messageBuilder;
-        this.input = input;
+        this.userArguments = userArguments;
         this.objParams = objParams;
         this.ErrorType = ErrorType;
         this.signature = signature;
@@ -35,13 +35,13 @@ export class TypeChecker {
 
     /**
      * @param {Object} [options]
-     * @param {Array|Object} [options.input=this.input] - The whole user input of all params.
+     * @param {Array|Object} [options.userData=this.userArguments] - The data to be validated.
      * @param {Object<TypeChecking.Type>} [options.objParams=this.objParams] - Params object built with Types.
      * @param {TypeChecking.MessageBuilder.Param} [options.parent] - The parent param.
      * @desc Validates object built with Types against user data.
      */
     execute(options = {}) {
-        const { input = this.input, objParams = this.objParams, parent } = options;
+        const { userData = this.userArguments, objParams = this.objParams, parent } = options;
 
         Object.keys(objParams).forEach((name, paramIndex) => {
             // step 1: get the validator function
@@ -57,7 +57,7 @@ export class TypeChecker {
             // });
 
             // step 4: get the value - [ array, of, arguments ] versus { object: of: arguments }
-            const value = getValue(input, paramIndex, name);
+            const value = getValue(userData, paramIndex, name);
 
             // step 5: invoke type's validate function
             paramValidate(value, this);

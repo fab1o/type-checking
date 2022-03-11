@@ -1,27 +1,28 @@
-import { getUserInputType, UserInputType } from './getUserInputType';
+import { getUserArgumentsType, UserArgumentsType } from './getUserArgumentsType';
 
 /**
- * @param {Array|Object} input - The user input.
- * @param {Number} paramIndex - The index in user input.
- * @param {String} name - The name of a property in user input.
- * @desc Gets the user input value: Step 2 of typecheckParams.
+ * @param {Array|Object} userData - The data to be validated.
+ * @param {Number} paramIndex - The index in user user arguments.
+ * @param {String} name - The name of a property in user arguments.
+ * @desc Gets the user arguments value.
  * @throws {ReferenceError} Internal failure.
- * @returns {*} The respective value in user input.
+ * @returns {*} The respective value in user userArguments.
  */
-export function getValue(input, paramIndex, name) {
-    // we must get the input type here
-    const inputType = getUserInputType(input);
+export function getValue(userData, paramIndex, name) {
+    // get the user arguments type
+    const inputType = getUserArgumentsType(userData);
 
     switch (inputType) {
-        case UserInputType.arguments:
-            return input[paramIndex];
+        case UserArgumentsType.array:
+            return userData[paramIndex];
 
-        case UserInputType.object:
-            return input[name];
+        case UserArgumentsType.object:
+            return userData[name];
 
         default:
-            // it should never get to this point. A user input must be either arguments or an options object,
-            // and it's enforced on ./typecheck/util/validateArguments.js
+            // it should never get to this point
+            // userArguments must be either array or object
+            // enforced on validateArguments.js
             throw ReferenceError('typecheckParams(...) error in step2.');
     }
 }

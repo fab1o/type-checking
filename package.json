@@ -1,24 +1,13 @@
 {
   "name": "@fab1o/type-checking",
-  "version": "2.0.0",
+  "version": "3.2.0",
   "description": "Throws Error when data fails to meet params.",
   "author": {
     "name": "Fabio Costa",
     "url": "https://github.com/fab1o"
   },
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fab1o/type-checking"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org"
-  },
   "private": false,
-  "bugs": {
-    "url": "https://github.com/fab1o/type-checking/issues"
-  },
-  "homepage": "https://github.com/fab1o/type-checking",
   "keywords": [
     "typechecking",
     "typechecker",
@@ -47,25 +36,37 @@
     "test:typecheck": "jest -i test/typecheck",
     "test:atLeastOne": "jest -i test/atLeastOne",
     "test:types:array": "jest -i test/types/array",
+    "test:types:custom": "jest -i test/types/custom",
     "test:types:in": "jest -i test/types/in",
     "test:types:object": "jest -i test/types/object"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fab1o/type-checking"
+  },
+  "bugs": {
+    "url": "https://github.com/fab1o/type-checking/issues"
+  },
+  "homepage": "https://github.com/fab1o/type-checking",
   "engines": {
     "node": ">= 10"
   },
   "devDependencies": {
-    "@babel/cli": "7.15.7",
-    "@babel/core": "7.15.5",
-    "@babel/preset-env": "7.15.6",
-    "@babel/register": "7.15.3",
+    "@babel/cli": "7.17.6",
+    "@babel/core": "7.17.5",
+    "@babel/preset-env": "7.16.11",
+    "@babel/register": "7.17.0",
     "@fab1o/eslint-config-babel": "1.1.1",
-    "babel-jest": "27.2.4",
-    "doctoc": "2.0.1",
-    "jest": "27.2.4"
+    "babel-jest": "27.5.1",
+    "doctoc": "2.1.0",
+    "jest": "27.5.1"
   },
   "dependencies": {
     "@fab1o/check-types": "12.2.0"
   },
   "types": "index.d.ts",
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  }
 }

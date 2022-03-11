@@ -13,7 +13,7 @@
 //  * @param {String} [options.plural=name+'s'] - Name in plural.
 //  * @param {Boolean} [options.expectArgs=false] - Whether type expects an argument or not.
 //  * @param {Boolean} [options.autoDisplayArgs=true] - Whether or not automatically display arguments.
-//  * @param {Function} [options.stringify=getArgumentValueName] - A function to replace the default getArgumentValueName function for the arguments of this type.
+//  * @param {Function} [options.stringifyArgs=getArgumentValueName] - A stringify function for the expected arguments of this type.
 //  * @desc Creates a user defined type and adds it to Types object.
 //  * @throws {TypeError} When a parameter is invalid.
 //  * @example
@@ -52,13 +52,13 @@
 //         throw TypeError(`${signature} options expected an Object or undefined.`);
 //     }
 
-//     const stringify = options.stringify ?? getArgumentValueName;
+//     const stringifyArgs = options.stringifyArgs ?? getArgumentValueName;
 //     const expectArgs = options.expectArgs ?? false;
 //     const autoDisplayArgs = options.autoDisplayArgs ?? true;
 
 //     const type = new Type(name, {
 //         ...options,
-//         stringify,
+//         stringifyArgs,
 //         expectArgs,
 //         autoDisplayArgs
 //     });
