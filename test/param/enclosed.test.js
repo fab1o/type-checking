@@ -1,39 +1,33 @@
 import { Types, typecheck } from '../../src';
 
-function objectEnclosedByArray(objs) {
+describe('param enclosed', () => {
     const params = {
         objs: Types.array.of.object({
             name: Types.string
         }).optional
     };
 
-    typecheck(objectEnclosedByArray, params, arguments);
-}
-
-describe('param enclosed', () => {
     it('throws an error', () => {
         expect(() => {
-            objectEnclosedByArray([]);
+            typecheck(params, [[]]);
         }).not.toThrow();
     });
 
     it('throws an error with empty object', () => {
         expect(() => {
-            objectEnclosedByArray([{}]);
-        }).toThrow(
-            'objectEnclosedByArray([{name}]) objs.name expected a String but received undefined.'
-        );
+            typecheck(params, [[{}]]);
+        }).toThrow('{[{name}]} objs.name expected a String but received undefined.');
     });
 
     it('throws another error', () => {
         expect(() => {
-            objectEnclosedByArray([
-                {
-                    name: null
-                }
+            typecheck(params, [
+                [
+                    {
+                        name: null
+                    }
+                ]
             ]);
-        }).toThrow(
-            'objectEnclosedByArray([{name}]) objs.name expected a String but received null.'
-        );
+        }).toThrow('{[{name}]} objs.name expected a String but received null.');
     });
 });

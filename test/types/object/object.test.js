@@ -27,6 +27,17 @@ describe('Types.object', () => {
         }).not.toThrow();
     });
 
+    it('not throw an error with empty object', () => {
+        expect(() => {
+            typecheck(
+                {
+                    obj: Types.object({})
+                },
+                [{}]
+            );
+        }).not.toThrow();
+    });
+
     it('not throw an error when passing it by itself', () => {
         expect(() => {
             typecheck(
@@ -154,5 +165,49 @@ describe('Types.object', () => {
         }).toThrow(
             '{{name, year, isActive}} options.year expected a Number but received undefined.'
         );
+    });
+
+    it('throw an error when null is given to Types.object', () => {
+        expect(() => {
+            typecheck(
+                {
+                    obj: Types.object(null)
+                },
+                [{}]
+            );
+        }).not.toThrow();
+    });
+
+    it('throw an error when invalid type (Boolean) is given to Types.object', () => {
+        expect(() => {
+            typecheck(
+                {
+                    obj: Types.object(true)
+                },
+                [{}]
+            );
+        }).not.toThrow();
+    });
+
+    it('throw an error when invalid type (Number) is given to Types.object', () => {
+        expect(() => {
+            typecheck(
+                {
+                    obj: Types.object(1)
+                },
+                [{}]
+            );
+        }).not.toThrow();
+    });
+
+    it('throw an error when empty object is given to Types.object', () => {
+        expect(() => {
+            typecheck(
+                {
+                    obj: Types.object({})
+                },
+                [{}]
+            );
+        }).not.toThrow();
     });
 });

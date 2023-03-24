@@ -17,8 +17,15 @@ const meta = {
     '\\': '\\\\'
 };
 
+/**
+ * @access private
+ * @param {String} value
+ * @desc Formats strings with quotes and removes special characters.
+ * @returns {String}
+ */
 function parseString(value) {
     rxEscapable.lastIndex = 0;
+
     if (rxEscapable.test(value)) {
         return `"${value.replace(rxEscapable, (a) => {
             const char = meta[a];
@@ -34,49 +41,69 @@ function parseString(value) {
     return `"${value}"`;
 }
 
-function objectify(value, maxNodes) {
+/**
+ * @access private
+ * @param {Array} array
+ * @param {String} [maxNodes=0] - Number of deep nodes to stringify an array.
+ * @desc Stringifies arrays.
+ * @returns {String}
+ */
+function stringifyArray(array, maxNodes = 0) {
     if (maxNodes === -1) {
-        if (Array.isArray(value)) {
-            return value.length > 0 ? '[...]' : '[]';
-        }
-
-        return Object.keys(value).length > 0 ? '{...}' : '{}';
+        return array.length > 0 ? '[...]' : '[]';
     }
 
-    let i, val, length;
+    let i, val;
 
     const partial = [];
 
-    if (Array.isArray(value)) {
-        length = value.length;
-        for (i = 0; i < length && (maxNodes === 0 || i < maxNodes); i++) {
-            partial[i] = str(i, value, -1) || 'null';
-        }
+    for (i = 0; i < array.length && (maxNodes === 0 || i < maxNodes); i++) {
+        const value = array[i];
 
-        if (partial.length === 0) {
-            val = '[]';
-        } else {
-            val = `[${partial.join(', ')}`;
-
-            if (maxNodes > 0 && length > maxNodes) {
-                val += ', ...]';
-            } else {
-                val += ']';
-            }
-        }
-
-        return val;
+        partial[i] = stringify(value, -1) || 'null';
     }
 
-    const keys = Object.keys(value);
+    if (partial.length === 0) {
+        val = '[]';
+    } else {
+        val = `[${partial.join(', ')}`;
 
-    length = keys.length;
+        if (maxNodes > 0 && array.length > maxNodes) {
+            val += ', ...]';
+        } else {
+            val += ']';
+        }
+    }
 
-    for (i = 0; i < length && (maxNodes === 0 || i < maxNodes); i++) {
+    return val;
+}
+
+/**
+ * @access private
+ * @param {Object} obj
+ * @param {String} [maxNodes=0] - Number of deep nodes to stringify an object.
+ * @desc Stringifies objects.
+ * @returns {String}
+ */
+function stringifyObject(obj, maxNodes = 0) {
+    if (maxNodes === -1) {
+        return Object.keys(obj).length > 0 ? '{...}' : '{}';
+    }
+
+    let i, val;
+
+    const partial = [];
+
+    const keys = Object.keys(obj);
+
+    for (i = 0; i < keys.length && (maxNodes === 0 || i < maxNodes); i++) {
         const kk = keys[i];
 
-        if (Object.prototype.hasOwnProperty.call(value, kk)) {
-            val = str(kk, value, -1);
+        if (Object.prototype.hasOwnProperty.call(obj, kk)) {
+            const value = obj[kk];
+
+            val = stringify(value, -1);
+
             if (val) {
                 partial.push(`${kk}:${val}`);
             }
@@ -88,7 +115,7 @@ function objectify(value, maxNodes) {
     } else {
         val = `{${partial.join(', ')}`;
 
-        if (maxNodes > 0 && length > maxNodes) {
+        if (maxNodes > 0 && keys.length > maxNodes) {
             val += ', ...}';
         } else {
             val += '}';
@@ -98,7 +125,13 @@ function objectify(value, maxNodes) {
     return val;
 }
 
-function strVal(value, maxNodes = 0) {
+/**
+ * @param {*} value - Any value.
+ * @param {Number} [maxNodes=2] - Number of deep nodes to stringify an object.
+ * @desc Stringify any value.
+ * @returns {String} Value stringified.
+ */
+export function stringify(value, maxNodes = 2) {
     switch (typeof value) {
         case 'string':
             return parseString(value);
@@ -117,58 +150,38 @@ function strVal(value, maxNodes = 0) {
             }
 
             switch (value.constructor?.name) {
-                case 'Date':
-                    return value.toISOString();
-
-                case 'Array':
-                case 'Object':
-                    return objectify(value, maxNodes);
-
                 case 'Boolean':
                 case 'Number':
                     return String(value.valueOf());
+
+                // special cases
+                case 'Array':
+                    return stringifyArray(value, maxNodes);
+
+                case 'Object':
+                    return stringifyObject(value, maxNodes);
 
                 case 'String':
                     return parseString(value.valueOf());
 
                 default:
+                    if (typeof value.toJSON === 'function') {
+                        return parseString(value.toJSON());
+                    }
+
                     // special types of objects or objects without a contructor
-                    try {
-                        if (typeof value.toString === 'function') {
-                            const strValue = value.toString();
+                    if (typeof value.toString === 'function') {
+                        const strValue = value.toString();
 
-                            if (strValue !== '' && strValue.indexOf('[object') === -1) {
-                                return strValue;
-                            }
+                        if (strValue !== '' && strValue.indexOf('[object') === -1) {
+                            return strValue;
                         }
+                    }
 
-                        return objectify(value, maxNodes);
-                    } catch {}
-
-                    return '';
+                    return stringifyObject(value, maxNodes);
             }
 
         default:
             return '';
     }
-}
-
-function str(key, holder, maxNodes = 0) {
-    let value = holder[key];
-
-    if (value && typeof value === 'object' && typeof value.toJSON === 'function') {
-        value = value.toJSON(value);
-    }
-
-    return strVal(value, maxNodes);
-}
-
-/**
- * @param {*} value - Any value.
- * @param {Number} [maxNodes=2] - Max number of nodes to stringify.
- * @desc Stringify any value.
- * @returns {String} Value stringified.
- */
-export function stringify(value, maxNodes = 2) {
-    return str('', { '': value }, maxNodes);
 }

@@ -1,4 +1,4 @@
-import Check from '@fab1o/check-types';
+import { Check } from '@fab1o/check-types';
 
 import { checkValue } from './util/checkValue';
 import { extendValidateCreator } from './extendValidateCreator';

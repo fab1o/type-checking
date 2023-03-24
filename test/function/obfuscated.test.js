@@ -16,9 +16,11 @@ const bbb = (...args) => {
     typecheck(bbb, params, args);
 };
 
-Object.defineProperty(bbb, 'name', { value: 'saveAccount', writable: true });
-
 describe('obfuscated function', () => {
+    beforeAll(() => {
+        Object.defineProperty(bbb, 'name', { value: 'saveAccount', writable: true });
+    });
+
     it('throw an error', () => {
         expect(() => {
             aaa();

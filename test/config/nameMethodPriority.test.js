@@ -31,7 +31,7 @@ describe.skip('Config.nameMethodPriority', () => {
         Config.reset();
     });
 
-    it('NameMethod.name', () => {
+    it('should work with NameMethod.name', () => {
         expect(() => {
             Config.nameMethodPriority = Config.NameMethod.name;
 
@@ -39,7 +39,7 @@ describe.skip('Config.nameMethodPriority', () => {
         }).toThrow('StudentName(arg) arg expected a String but received undefined.');
     });
 
-    it('NameMethod.toString', () => {
+    it('should work with NameMethod.toString', () => {
         expect(() => {
             Config.nameMethodPriority = Config.NameMethod.toString;
 
@@ -47,7 +47,7 @@ describe.skip('Config.nameMethodPriority', () => {
         }).toThrow('StudentToString(arg) arg expected a String but received undefined.');
     });
 
-    it('reset', () => {
+    it('should work with reset', () => {
         expect(() => {
             Config.reset();
 
@@ -55,7 +55,7 @@ describe.skip('Config.nameMethodPriority', () => {
         }).toThrow('StudentName(arg) arg expected a String but received undefined.');
     });
 
-    it('custom name', () => {
+    it('should work with custom name', () => {
         expect(() => {
             Student.method();
         }).toThrow('StudentName.myMethod(arg) arg expected a String but received undefined.');

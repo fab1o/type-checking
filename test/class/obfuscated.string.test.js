@@ -9,7 +9,7 @@ class A {
         typecheck('Account', params, arguments);
     }
 
-    saveAccount() {
+    static saveAccount() {
         const params = {
             isOk: Types.boolean
         };
@@ -27,7 +27,7 @@ describe('obfuscated function', () => {
         expect(() => {
             const a = new A(true);
 
-            a.saveAccount();
+            A.saveAccount();
         }).toThrow(
             'Account.saveAccount(isOk) isOk expected a Boolean but received undefined.'
         );

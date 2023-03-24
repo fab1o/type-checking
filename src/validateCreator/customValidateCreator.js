@@ -1,4 +1,4 @@
-import { assert } from '@fab1o/check-types';
+import { Check } from '@fab1o/check-types';
 
 import { Config } from '../config';
 
@@ -71,7 +71,7 @@ export function customValidateCreator(
             // check for array or nonEmptyArray
             // ***
             // assert[arrayOfType](value, errorMessage, ErrorType);
-            assert.array(value, errorMessage, ErrorType);
+            Check.assert.array(value, errorMessage, ErrorType);
             value.forEach((val) => assertValue(val));
         } else {
             assertValue(value);

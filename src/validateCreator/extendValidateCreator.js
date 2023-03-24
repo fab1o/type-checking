@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import Check from '@fab1o/check-types';
+import { Check } from '@fab1o/check-types';
 
 import { defineProperty } from '../util/defineProperty';
 

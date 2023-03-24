@@ -1,5 +1,23 @@
 import { Check, Config, Types, typecheck } from '../../../src';
 
+const aValidator = (a, userArguments) => {
+    const { b } = userArguments[0];
+
+    const both = Check.assigned(b) && Check.nonEmptyString(a);
+    const neither = Check.not.assigned(b) && Check.not.assigned(a);
+
+    return both || neither;
+};
+
+const bValidator = (b, userArguments) => {
+    const { a } = userArguments[0];
+
+    const both = Check.assigned(a) && Check.greaterOrEqual(b, 0);
+    const neither = Check.not.assigned(a) && Check.not.assigned(b);
+
+    return both || neither;
+};
+
 describe('Types.custom()', () => {
     it('type name to be correct', () => {
         expect(Types.custom().typeName).toBe('custom');
@@ -125,24 +143,6 @@ describe('Types.custom()', () => {
 
     it('does not throw error for a very customized type using userArguments', () => {
         expect(() => {
-            const aValidator = (a, userArguments) => {
-                const { b } = userArguments[0];
-
-                const both = Check.assigned(b) && Check.nonEmptyString(a);
-                const neither = Check.not.assigned(b) && Check.not.assigned(a);
-
-                return both || neither;
-            };
-
-            const bValidator = (b, userArguments) => {
-                const { a } = userArguments[0];
-
-                const both = Check.assigned(a) && Check.greaterOrEqual(b, 0);
-                const neither = Check.not.assigned(a) && Check.not.assigned(b);
-
-                return both || neither;
-            };
-
             typecheck(
                 {
                     options: Types.object({

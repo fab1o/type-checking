@@ -1,10 +1,24 @@
 import Parent from './parent';
 
 describe('Parent method', () => {
-    it('throw an error', () => {
-        expect(() => {
-            const parent = new Parent();
+    let parent;
 
+    beforeEach(() => {
+        parent = new Parent({
+            name: 'Parent'
+        });
+    });
+
+    it('throw an error on constructor where argument is invalid', () => {
+        expect(() => {
+            new Parent({
+                name: null
+            });
+        }).toThrow('MyParent({name}) options.name expected a String but received null.');
+    });
+
+    it('throw an error on method', () => {
+        expect(() => {
             parent.method({
                 name: null
             });
@@ -15,8 +29,6 @@ describe('Parent method', () => {
 
     it('throw an error on expected', () => {
         expect(() => {
-            const parent = new Parent();
-
             parent.expected(null);
         }).toThrow(
             'MyParent.expected(date) date expected an instance of Number but received null.'

@@ -1,5 +1,5 @@
 // ***
-// import Check from '@fab1o/check-types';
+// import { Check } from '@fab1o/check-types';
 
 // import { Types, Type } from './types';
 // import { createCustomValidator, getArgumentValueName } from './util';
@@ -8,7 +8,6 @@
 //  * @param {String} name - Type name.
 //  * @param {Function} validator - Custom function that validates input, must return boolean.
 //  * @param {Object} [options]
-//  * @param {String} [options.assert=name] - Type assert.
 //  * @param {String} [options.singular=name] - Name in singular.
 //  * @param {String} [options.plural=name+'s'] - Name in plural.
 //  * @param {Boolean} [options.expectArgs=false] - Whether type expects an argument or not.

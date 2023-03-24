@@ -8,7 +8,7 @@
  *   - Object (or class instance)
  */
 
-import Check from '@fab1o/check-types';
+import { Check } from '@fab1o/check-types';
 
 import { getTypeToString } from './getTypeToString';
 

@@ -1,4 +1,6 @@
-import { Types, typecheck } from '../../index';
+import { Check, Types, typecheck } from '../../index';
+
+Check.object({});
 
 const Enum = { a: 'a' };
 
@@ -30,21 +32,31 @@ class AccountManager {
 
         typecheck(this, params, args);
 
+        typecheck(this, params, args, Error);
+
         typecheck(this, params, {});
+
+        typecheck(params, args, Error);
     }
 }
 
 class Account {
     constructor(options) {
         const params = {
-            optins: Types.object({
+            options: Types.object({
                 manager: Types.instanceStrict(AccountManager)
             })
         };
 
         typecheck.atLeastOne(this, params, arguments);
 
+        typecheck.atLeastOne(this, params, arguments, TypeError);
+
         typecheck.atLeastOne(this, params, {});
+
+        typecheck.warn(this, arguments);
+
+        typecheck.warn(this, arguments, SyntaxError);
     }
 
     method() {
@@ -59,5 +71,7 @@ class Account {
         typecheck(this, this.method, params, arguments);
 
         typecheck(this, this.method, params, {});
+
+        typecheck.warn(this, this.method, params, arguments);
     }
 }

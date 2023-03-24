@@ -1,4 +1,4 @@
-import Check from '@fab1o/check-types';
+import { Check } from '@fab1o/check-types';
 
 import { getTypeToString, hasSuperclass } from '../util';
 
@@ -24,7 +24,7 @@ export class MethodSignature {
         } = options;
 
         // Whether or not it should add three dots to the list of param names to represent that it inherits more params.
-        const displayEtcetera = hasSuperclass(object);
+        const displayEtcetera = hasSuperclass(object) && method == null;
 
         this.object = object;
         this.method = method;

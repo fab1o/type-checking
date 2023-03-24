@@ -1,5 +1,5 @@
 // ***
-// import Check from '@fab1o/check-types';
+// import { Check } from '@fab1o/check-types';
 
 // import { Config } from '../config';
 // import { buildReceivedMessage } from '../messageBuilder/buildReceivedMessage';

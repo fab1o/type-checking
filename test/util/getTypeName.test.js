@@ -158,7 +158,7 @@ describe('getTypeName', () => {
         expect(getTypeName(simpleObject)).toBe('Object');
     });
 
-    it('tampered objects', () => {
+    it('should work with tampered objects', () => {
         const obj = {};
         const obj2 = {};
 
@@ -169,55 +169,55 @@ describe('getTypeName', () => {
         expect(getTypeName(obj2)).toBe('Object');
     });
 
-    it('Date', () => {
+    it('should work with Date', () => {
         const output = getTypeName(Date);
 
         expect(output).toBe('Date');
     });
 
-    it('Array', () => {
+    it('should work with Array', () => {
         const output = getTypeName(Array);
 
         expect(output).toBe('Array');
     });
 
-    it('Number', () => {
+    it('should work with Number', () => {
         const output = getTypeName(Number);
 
         expect(output).toBe('Number');
     });
 
-    it('String', () => {
+    it('should work with String', () => {
         const output = getTypeName(String);
 
         expect(output).toBe('String');
     });
 
-    it('Boolean', () => {
+    it('should work with Boolean', () => {
         const output = getTypeName(Boolean);
 
         expect(output).toBe('Boolean');
     });
 
-    it('NaN', () => {
+    it('should work with NaN', () => {
         const output = getTypeName(NaN);
 
         expect(output).toBe('NaN');
     });
 
-    it('Infinity', () => {
+    it('should work with Infinity', () => {
         const output = getTypeName(Infinity);
 
         expect(output).toBe('Number');
     });
 
-    it('null', () => {
+    it('should work with null', () => {
         const output = getTypeName(null);
 
         expect(output).toBe('null');
     });
 
-    it('null with default value as ""', () => {
+    it('should work with null with default value as ""', () => {
         const output = getTypeName(null, '');
 
         expect(output).toBe('');

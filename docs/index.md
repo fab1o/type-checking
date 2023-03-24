@@ -411,6 +411,7 @@ If data doesn't meet the Type description, a error will be thrown.
 | Type name                         | Type description                                                                                                                   | Implemented |
 | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | `Types.array`                     | data is an Array                                                                                                                   | Yes         |
+| `Types.arrayBuffer`               | data is an [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer)             | Yes         |
 | `Types.arrayBufferView`           | data is an [ArrayBuffer view](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer/isView) | Yes         |
 | `Types.arrayLike`                 | data is an Array-like                                                                                                              | No          |
 | `Types.assigned`                  | data is not **null** or **undefined**                                                                                              | Yes         |
@@ -430,7 +431,7 @@ If data doesn't meet the Type description, a error will be thrown.
 | `Types.greaterOrEqual(a)`         | data is a Number greater or equal to `a`                                                                                           | Yes         |
 | `Types.hasLength(a)`              | data has length of `a` (for strings and arrays)                                                                                    | No          |
 | `Types.in(a)`                     | data is a value in `a` Array/Object                                                                                                | No          |
-| `Types.inheritance(a)`            | data is a type that inherits from `a` type                                                                                         | No          |
+| `Types.inheritance(a)`            | data is a type that inherits from `a` type                                                                                         | Yes         |
 | `Types.inRange(a, b)`             | data is a Number in the range `a` to `b`                                                                                           | No          |
 | `Types.instance(a)`               | data is an instance of `a` or data.name is `a`.name or its toString is "[object a]"                                                | No          |
 | `Types.instanceStrict(a)`         | data is an instance of `a`                                                                                                         | Yes         |
@@ -440,7 +441,7 @@ If data doesn't meet the Type description, a error will be thrown.
 | `Types.less(a)`                   | data is a Number lower than `a`                                                                                                    | No          |
 | `Types.lessOrEqual(a)`            | data is a Number lower or equal to `a`                                                                                             | No          |
 | `Types.like(a)`                   | data is an Object that is like `a` Object                                                                                          | Yes         |
-| `Types.match(a)`                  | data is a String that matches `a` regular expression                                                                               | No          |
+| `Types.match(a)`                  | data is a String that matches `a` regular expression                                                                               | Yes         |
 | `Types.nan`                       | data is NaN (not a number)                                                                                                         | No          |
 | `Types.negative`                  | data is a Number lower than zero                                                                                                   | No          |
 | `Types.nonEmptyArray`             | data is a non-empty Array                                                                                                          | No          |

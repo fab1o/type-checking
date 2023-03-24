@@ -128,43 +128,43 @@ describe('getTypeToString', () => {
         expect(getTypeToString(obj2)).toBe('Object');
     });
 
-    it('Date', () => {
+    it('should work with Date', () => {
         const output = getTypeToString(Date);
 
         expect(output).toBe('Date');
     });
 
-    it('Array', () => {
+    it('should work with Array', () => {
         const output = getTypeToString(Array);
 
         expect(output).toBe('Array');
     });
 
-    it('Number', () => {
+    it('should work with Number', () => {
         const output = getTypeToString(Number);
 
         expect(output).toBe('Number');
     });
 
-    it('String', () => {
+    it('should work with String', () => {
         const output = getTypeToString(String);
 
         expect(output).toBe('String');
     });
 
-    it('Boolean', () => {
+    it('should work with Boolean', () => {
         const output = getTypeToString(Boolean);
 
         expect(output).toBe('Boolean');
     });
 
-    it('NaN', () => {
+    it('should work with NaN', () => {
         const output = getTypeToString(NaN);
 
         expect(output).toBe('NaN');
     });
 
-    it('Infinity', () => {
+    it('should work with Infinity', () => {
         const output = getTypeToString(Infinity);
 
         expect(output).toBe('Infinity');

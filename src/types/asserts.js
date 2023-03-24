@@ -4,9 +4,9 @@ import {
     objectValidateCreator,
     skipValidateCreator
 } from '../validateCreator';
-import { getTypeToString, stringifyKeys, stringifyValues } from '../util';
+import { getTypeToString, stringifyKeys, stringifyValues, stringifyRegExp } from '../util';
 
-import { arrayBufferViewValidator, dateStringValidator } from './validator';
+import { dateStringValidator } from './validator';
 
 /**
  * Asserts object defines all the asserts of the Types (check-types library).
@@ -31,13 +31,21 @@ export const Asserts = [
     //     validateCreator: genericValidateCreator
     // },
     {
+        assertName: 'arrayBuffer',
+        singular: 'an ArrayBuffer',
+        plural: 'arrayBuffers',
+        expectArgs: false,
+        isArrayable: false,
+        validateCreator: genericValidateCreator
+        // , orAsserts: ['nonEmptyString']
+    },
+    {
         assertName: 'arrayBufferView',
         singular: 'an ArrayBufferView',
         plural: 'arrayBufferViews',
         expectArgs: false,
         isArrayable: false,
-        validateCreator: genericValidateCreator,
-        validator: arrayBufferViewValidator
+        validateCreator: genericValidateCreator
         // , orAsserts: ['nonEmptyString']
     },
     {
@@ -266,23 +274,15 @@ export const Asserts = [
         stringifyArgs: stringifyKeys,
         validateCreator: genericValidateCreator
     },
-    // {
-    //     assertName: 'match',
-    //     singular: 'a String that matches /{a}/',
-    //     plural: 'strings that match /{a}/',
-    //     expectArgs: true,
-    //     isArrayable: false,
-    //     stringifyArgs: stringifyValues,
-    //     validateCreator: genericValidateCreator
-    // },
-    // {
-    //     assertName: 'nan',
-    //     singular: 'NaN',
-    //     plural: 'NaN',
-    //     expectArgs: false,
-    //     isArrayable: false,
-    //     validateCreator: genericValidateCreator
-    // },
+    {
+        assertName: 'match',
+        singular: 'a String that matches /{a}/',
+        plural: 'strings that match /{a}/',
+        expectArgs: true,
+        isArrayable: false,
+        stringifyArgs: stringifyRegExp,
+        validateCreator: genericValidateCreator
+    },
     // {
     //     assertName: 'negative',
     //     singular: 'a Number lower than 0',

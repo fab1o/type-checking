@@ -1,7 +1,17 @@
 import { Types, typecheck } from '../../../../src';
 
 export default class Parent {
-    method() {
+    constructor(options) {
+        const params = {
+            options: Types.object({
+                name: Types.string
+            })
+        };
+
+        typecheck(this, params, arguments);
+    }
+
+    method(options) {
         const params = {
             options: Types.object({
                 name: Types.string
@@ -11,7 +21,7 @@ export default class Parent {
         typecheck(this, this.method, params, arguments);
     }
 
-    expected() {
+    expected(date) {
         const params = {
             date: Types.instanceStrict(Number)
         };

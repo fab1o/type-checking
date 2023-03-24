@@ -1,15 +1,16 @@
 // Type definitions for @fab1o/type-checking
 //#region addType
-interface MinTypeOptions {
-    singular?: string;
-    plural?: string;
-    expectArgs?: boolean;
-    stringify?: Function;
-}
+// interface MinTypeOptions {
+//     singular?: string;
+//     plural?: string;
+//     expectArgs?: boolean;
+//     autoDisplayArgs?: boolean;
+//     stringifyArgs?: Function;
+// }
 
-export function addType(name: string, validator: Function, options?: MinTypeOptions): void;
-export function extendParams(...args: object[]): void;
-export function validateParams(params: object): boolean;
+// export function addType(name: string, validator: Function, options?: MinTypeOptions): void;
+// export function extendParams(...args: object[]): void;
+// export function validateParams(params: object): boolean;
 //#endregion
 
 //#region typecheck
@@ -17,150 +18,61 @@ export function typecheck(
     object: string | object,
     method: string | Function,
     params: object,
-    args: any[] | IArguments | object
+    args: any[] | IArguments | object,
+    error?: typeof Error | Error
 ): void;
 
 export function typecheck(
     func: string | Function | object,
     params: object,
-    args: any[] | IArguments | object
+    args: any[] | IArguments | object,
+    error?: typeof Error | Error
 ): void;
 
-export function typecheck(params: object, args: any[] | IArguments | object): void;
+export function typecheck(
+    params: object,
+    args: any[] | IArguments | object,
+    error?: typeof Error | Error
+): void;
 
 export namespace typecheck {
+    function warn(
+        object: string | object,
+        method: string | Function,
+        params: object,
+        args: any[] | IArguments | object,
+        error?: typeof Error | Error
+    ): void;
+    function warn(
+        func: string | Function | object,
+        params: object,
+        args: any[] | IArguments | object,
+        error?: typeof Error | Error
+    ): void;
+    function warn(
+        params: object,
+        args: any[] | IArguments | object,
+        error?: typeof Error | Error
+    ): void;
     function atLeastOne(
         object: string | object,
         method: string | Function,
         params: object,
-        args: any[] | IArguments | object
+        args: any[] | IArguments | object,
+        error?: typeof Error | Error
     ): void;
     function atLeastOne(
         func: string | Function | object,
         params: object,
-        args: any[] | IArguments | object
+        args: any[] | IArguments | object,
+        error?: typeof Error | Error
     ): void;
-    function atLeastOne(params: object, args: any[] | IArguments | object): void;
+    function atLeastOne(
+        params: object,
+        args: any[] | IArguments | object,
+        error?: typeof Error | Error
+    ): void;
 }
-//#endregion
-
-//#region Check
-type NegationFunction = (val: any) => boolean;
-
-type MaybeFunction = <T>(val: T) => boolean | T;
-
-interface ArrayFunction {
-    (a: any): a is any[];
-    of: {
-        [method: string]: boolean;
-    };
-}
-
-interface ArrayLikeFunction {
-    (a: any): a is ArrayLike<any>;
-    of: {
-        [method: string]: boolean;
-    };
-}
-
-interface IterableFunction {
-    (a: any): a is Iterable<any>;
-    of: {
-        [method: string]: boolean;
-    };
-}
-
-interface ObjectFunction {
-    (a: any): a is object;
-    of: {
-        [method: string]: boolean;
-    };
-}
-
-interface AssertFunction extends ICheck {
-    <T>(possibleFalsy: T, message?: string, errorType?: { new (...args: any[]): any }): T;
-}
-
-interface ICheck {
-    /* General predicates */
-    equal(a: any, b: any): boolean;
-    null(a: any): a is null;
-    undefined(a: any): a is undefined;
-    assigned(a: any): boolean;
-    primitive(a: any): a is number | string | boolean | null | undefined | symbol;
-    hasLength(a: any, length: number): boolean;
-
-    /* String predicates */
-    string(a: any): a is string;
-    emptyString(a: string): boolean;
-    nonEmptyString(a: string): boolean;
-    contains(a: any, value: any): boolean;
-    in(value: any, a: any): boolean;
-    match(a: string, b: RegExp): boolean;
-
-    /* Number predicates */
-    number(a: number);
-    integer(a: any): a is number;
-    zero(a: any): boolean;
-    infinity(a: any): boolean;
-    greater(num: number, greaterThan: number): boolean;
-    greaterOrEqual(num: number, greaterOrEqual: number): boolean;
-    less(num: number, lessThan: number): boolean;
-    lessOrEqual(num: number, lessOrEqual: number): boolean;
-    between(num: number, a: number, b: number): boolean;
-    inRange(num: number, a: number, b: number): boolean;
-    positive(num: number): boolean;
-    negative(num: number): boolean;
-    odd(num: number): boolean;
-    even(num: number): boolean;
-
-    /* Boolean predicates */
-    boolean(a: any): a is boolean;
-
-    /* Object predicates */
-    object: ObjectFunction;
-    emptyObject(a: object): boolean;
-    nonEmptyObject(a: object): boolean;
-    thenable<T extends object>(obj: T): boolean;
-    containsKey<T extends object>(obj: T, a: any): boolean;
-    keyIn<T extends object>(a: any, obj: T): boolean;
-    instanceStrict<T extends object>(a: any, prototype: T): a is T;
-    instance<T extends object>(a: any, prototype: T): a is T;
-    like<T extends object>(a: any, duck: T): a is T;
-
-    /* Array predicates */
-    array: ArrayFunction;
-    emptyArray(a: any[]): boolean;
-    nonEmptyArray(a: any[]): boolean;
-    arrayLike: ArrayLikeFunction;
-    iterable: IterableFunction;
-    includes(a: any[], value: any): boolean;
-
-    /* Date predicates */
-    date(a: any): a is Date;
-
-    /* Function predicates */
-    function(a: any): a is (...args: any[]) => any;
-
-    /* Modifiers (some of them in their respected sections) */
-    not: ICheck & NegationFunction;
-    maybe: ICheck & MaybeFunction;
-    assert: AssertFunction;
-
-    /* Batch operations */
-    apply<T>(arr: any[], predicate: (...args: any[]) => T): T[];
-
-    map<T extends { [k: string]: any }>(
-        arr: T,
-        predicates: Partial<{ [k in keyof T]: (...args: any[]) => boolean }>
-    ): Partial<{ [k in keyof T]: any }>;
-
-    all(arr: boolean[] | { [k: string]: boolean }): boolean;
-
-    any(arr: boolean[] | { [k: string]: boolean }): boolean;
-}
-
-export const Check: ICheck;
 //#endregion
 
 //#region Config
@@ -209,7 +121,6 @@ interface IConfigOptions {
 
 //#region Types
 interface IArray extends IExtensible {
-    (a: any): void;
     of: ITypes;
 }
 
@@ -383,11 +294,12 @@ interface ILoggable {
 interface ITypes {
     array: IArray;
     // arrayLike: IExtensible;
+    arrayBuffer: IExtensible;
     arrayBufferView: IExtensible;
     assigned: IExtensible;
-    // between(x: number, y: number): IExtensible;
+    // between(a: number, b: number): IExtensible;
     boolean: IExtensible;
-    custom(customValidator: Function, errorMessage?: String, ...args: any[]): IExtensible;
+    custom(customValidator: Function, errorMessage?: string, ...args: any[]): IExtensible;
     date: IExtensible;
     dateString: IExtensible;
     // emptyArray: IExtensible;
@@ -397,21 +309,21 @@ interface ITypes {
     // equal: IExtensible;
     // float: IExtensible;
     function: IExtensible;
-    // hasLength(x: number): IExtensible;
-    // greater(x: number): IExtensible;
-    greaterOrEqual(x: number): IExtensible;
+    // hasLength(num: number): IExtensible;
+    // greater(num: number): IExtensible;
+    greaterOrEqual(num: number): IExtensible;
     in<T extends object>(x: T): IExtensible;
-    inheritance<T extends Function>(x: T): IExtensible;
-    // inRange(x: number, y: number): IExtensible;
-    // instance<T extends object>(x: T): IExtensible;
-    instanceStrict<T extends object>(x: T): IExtensible;
+    inheritance<T extends Function>(prototype: T): IExtensible;
+    instanceStrict<T extends Function>(prototype: T): IExtensible;
+    // instance<T extends Function>(prototype: T): IExtensible;
+    // inRange(a: number, b: number): IExtensible;
     integer: IExtensible;
     // iterable: IExtensible;
     keyIn<T extends object>(x: T): IExtensible;
-    // less(x: number): IExtensible;
-    // lessOrEqual(x: number): IExtensible;
+    // less(num: number): IExtensible;
+    // lessOrEqual(num: number): IExtensible;
     like<T extends object>(x: T): IExtensible;
-    // match(x: RegExp): IExtensible;
+    match(regexp: RegExp): IExtensible;
     // nan: IExtensible;
     // negative: IExtensible;
     // nonEmptyArray: IArray;
@@ -419,7 +331,7 @@ interface ITypes {
     nonEmptyString: IExtensible;
     // null: IExtensible;
     number: IExtensible;
-    object(x?: object): IExtensible;
+    object(obj?: object): IExtensible;
     // odd: IExtensible;
     positive: IExtensible;
     skip: ILoggable;
@@ -429,4 +341,121 @@ interface ITypes {
 }
 
 export const Types: ITypes;
+//#endregion
+
+//#region Check - Copy from https://github.bamtech.co/fed-packages/check-types/blob/master/src/index.d.ts
+type NegationFunction = (val: any) => boolean;
+
+type MaybeFunction = <T>(val: T) => boolean | T;
+
+interface AssertFunction extends ICheck {
+    <T>(possibleFalsy: T, message?: string, errorType?: { new (...args: any[]): any }): T;
+}
+
+interface ICheck {
+    /* General predicates */
+    equal(a: any, b: any): a is typeof b;
+    null(a: any): a is null;
+    undefined(a: any): a is undefined;
+    assigned(a: any): boolean;
+    primitive(a: any): a is number | string | boolean | null | undefined | symbol;
+
+    hasLength(a: any, length: number): a is string | any[];
+
+    /* String predicates */
+    string(a: any): a is string;
+    emptyString(a: any): a is '';
+    nonEmptyString(a: any): a is string;
+    match(a: any, b: RegExp): a is string;
+
+    /* Number predicates */
+    number(a: any): a is number;
+    zero(a: any): a is 0;
+    integer(a: any): a is number;
+    greater(a: any, greaterThan: number): a is number;
+    greaterOrEqual(a: any, greaterOrEqual: number): a is number;
+    less(a: any, lessThan: number): a is number;
+    lessOrEqual(a: any, lessOrEqual: number): a is number;
+    between(a: any, b: number, c: number): a is number;
+    inRange(a: any, b: number, c: number): a is number;
+    positive(a: any): a is number;
+    negative(a: any): a is number;
+    odd(a: any): a is number;
+    even(a: any): a is number;
+    nan(a: any): a is number;
+    infinity(a: any): a is typeof Infinity;
+
+    arrayBuffer(a: any): a is ArrayBuffer;
+    arrayBufferView(
+        a: any
+    ): a is
+        | Int8Array
+        | Uint8Array
+        | Uint8ClampedArray
+        | Int16Array
+        | Uint16Array
+        | Int32Array
+        | Uint32Array
+        | Float32Array
+        | Float64Array
+        | BigInt64Array
+        | BigUint64Array
+        | DataView;
+
+    /* Boolean predicates */
+    boolean(a: any): a is true | false;
+
+    /* Object predicates */
+    object(a: any): a is object;
+    // this is boolean because const empty objects can still be modified
+    emptyObject(a: any): a is {};
+    nonEmptyObject(a: any): boolean;
+
+    in<T extends object | string | any[]>(value: any, data: T): boolean;
+    keyIn<T extends object | string | any[]>(key: any, data: T): key is keyof T;
+
+    contains<T extends object | string | any[]>(data: T, value: any): boolean;
+    containsKey<T extends object | string | any[]>(data: T, key: any): key is keyof T;
+
+    thenable<T extends object>(obj?: any): obj is Promise<T>;
+
+    instanceStrict<T extends Function>(a: any, prototype: T): a is T;
+    instance<T extends Function>(a: any, prototype: T): a is T;
+    like<T extends object>(a: any, duck: T): a is object;
+
+    /* Array predicates */
+    array(a: any): a is any[];
+    // this is boolean because const empty arrays can still be modified
+    emptyArray(a: any): a is [];
+    nonEmptyArray(a: any): boolean;
+
+    arrayLike(a: any): a is [] | string;
+    iterable<T extends object | string | any[]>(a: any): a is Iterable<T>;
+
+    /* Date predicates */
+    date(a: any): a is Date;
+
+    /* Function predicates */
+    function(a: any): a is Function;
+    throws(a: any): a is Function;
+
+    /* Modifiers (some of them in their respected sections) */
+    not: ICheck & NegationFunction;
+    maybe: ICheck & MaybeFunction;
+    assert: AssertFunction;
+
+    /* Batch operations */
+    apply<T>(arr: any[], predicate: (...args: any[]) => T): T[];
+
+    map<T extends { [k: string]: any }>(
+        arr: T,
+        predicates: Partial<{ [k in keyof T]: (...args: any[]) => boolean }>
+    ): Partial<{ [k in keyof T]: any }>;
+
+    all(arr: boolean[] | { [k: string]: boolean }): boolean;
+
+    any(arr: boolean[] | { [k: string]: boolean }): boolean;
+}
+
+export const Check: ICheck;
 //#endregion

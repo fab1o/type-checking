@@ -1,4 +1,4 @@
-import { Types, typecheck, Config } from '../../src';
+import { Types, typecheck } from '../../src';
 
 class A {
     constructor() {

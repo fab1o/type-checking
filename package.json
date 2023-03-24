@@ -1,6 +1,6 @@
 {
   "name": "@fab1o/type-checking",
-  "version": "3.2.0",
+  "version": "3.9.0",
   "description": "Throws Error when data fails to meet params.",
   "author": {
     "name": "Fabio Costa",
@@ -22,14 +22,15 @@
     "validation"
   ],
   "scripts": {
-    "package": "npm i && npm run docs && npm test && npm run build",
-    "docs": "doctoc docs/ --notitle && npm run lint-fix",
-    "doc": "npm run docs",
     "build": "npm run clean && npm run build:only",
     "build:only": "babel src -d lib --no-comments",
     "clean": "rm -rf lib",
+    "docs": "doctoc docs/ --notitle && npm run lint-fix",
+    "doc": "npm run docs",
     "lint": "eslint . --ext .js",
     "lint-fix": "prettier --ignore-path \".prettierignore\" --write \"./**/*.{js,ts,json,md}\" && eslint . --ext .js --fix",
+    "package": "npm i && npm run docs && npm test && npm run build",
+    "prepare": "husky install",
     "test": "jest --silent",
     "test:config": "jest -i test/config",
     "test:addType": "jest -i test/addType",
@@ -37,8 +38,10 @@
     "test:atLeastOne": "jest -i test/atLeastOne",
     "test:types:array": "jest -i test/types/array",
     "test:types:custom": "jest -i test/types/custom",
+    "test:types:match": "jest -i test/types/match",
     "test:types:in": "jest -i test/types/in",
-    "test:types:object": "jest -i test/types/object"
+    "test:types:object": "jest -i test/types/object",
+    "test:class:relationship": "jest -i test/class/relationship"
   },
   "repository": {
     "type": "git",
@@ -52,17 +55,20 @@
     "node": ">= 10"
   },
   "devDependencies": {
-    "@babel/cli": "7.17.6",
-    "@babel/core": "7.17.5",
-    "@babel/preset-env": "7.16.11",
-    "@babel/register": "7.17.0",
+    "@babel/cli": "7.21.0",
+    "@babel/core": "7.21.3",
+    "@babel/preset-env": "7.20.2",
     "@fab1o/eslint-config-babel": "1.1.1",
-    "babel-jest": "27.5.1",
-    "doctoc": "2.1.0",
-    "jest": "27.5.1"
+    "doctoc": "2.2.1",
+    "husky": "8.0.3",
+    "jest": "29.5.0",
+    "lint-staged": "13.2.0"
   },
   "dependencies": {
-    "@fab1o/check-types": "12.2.0"
+    "@fab1o/check-types": "14.4.0"
+  },
+  "lint-staged": {
+    "**/*.js": "eslint"
   },
   "types": "index.d.ts",
   "license": "MIT",

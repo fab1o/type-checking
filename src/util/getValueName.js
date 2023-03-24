@@ -5,7 +5,7 @@
  *   - Any type of variable
  */
 
-import Check from '@fab1o/check-types';
+import { Check } from '@fab1o/check-types';
 
 import { getArticle } from './getArticle';
 import { getTypeName } from './getTypeName';

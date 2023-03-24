@@ -13,7 +13,7 @@ describe('Types.arrayBufferView', () => {
         expect(Types.arrayBufferView.warn.typeName).toBe('arrayBufferView');
     });
 
-    it('does not throw an error when data is correct', () => {
+    it('throws an error when data is correct', () => {
         expect(() => {
             const buffer = new ArrayBuffer(16);
 
@@ -28,7 +28,7 @@ describe('Types.arrayBufferView', () => {
         );
     });
 
-    it('throw an error expected type', () => {
+    it('throws an error expected type', () => {
         expect(() => {
             typecheck(
                 {
@@ -39,7 +39,7 @@ describe('Types.arrayBufferView', () => {
         }).toThrow('{view} view expected an ArrayBufferView but received null.');
     });
 
-    it('throw an error for given type', () => {
+    it('does not throw an error for given type', () => {
         expect(() => {
             const view = new Uint16Array(16);
 

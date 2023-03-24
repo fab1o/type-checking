@@ -11,5 +11,6 @@ export * from './isEveryParamNonRequired';
 export * from './isObjectTypes';
 export * from './stringify';
 export * from './stringifyKeys';
+export * from './stringifyRegExp';
 export * from './stringifyValues';
 export * from './verifyValidateFunction';

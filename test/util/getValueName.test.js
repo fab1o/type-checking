@@ -138,7 +138,7 @@ describe('getValueName', () => {
         expect(noDifference).toBe(account.toString());
     });
 
-    it('simple object', () => {
+    it('should work with simple object', () => {
         const simpleObject = {
             name: 'SimpleObject'
         };
@@ -148,7 +148,7 @@ describe('getValueName', () => {
         expect(output).toBe('an Object: {name:"SimpleObject"}');
     });
 
-    it('simple object without type name', () => {
+    it('should work with simple object without type name', () => {
         const simpleObject = {
             name: 'SimpleObject'
         };
@@ -158,17 +158,18 @@ describe('getValueName', () => {
         expect(output).toBe('{name:"SimpleObject"}');
     });
 
-    it('new Object', () => {
+    it('should work with new Object', () => {
         const simpleObject = {
             name: 'SimpleObject'
         };
 
+        // eslint-disable-next-line no-new-object
         const output = getValueName(new Object(simpleObject), { includeTypeName: true });
 
         expect(output).toBe('an Object: {name:"SimpleObject"}');
     });
 
-    it('Number', () => {
+    it('should work with Number', () => {
         const value = 1;
 
         const output = getValueName(value, { includeTypeName: true });
@@ -176,7 +177,7 @@ describe('getValueName', () => {
         expect(output).toBe('a Number: 1');
     });
 
-    it('Number without type name', () => {
+    it('should work with Number without type name', () => {
         const value = 1;
 
         const output = getValueName(value);
@@ -184,7 +185,7 @@ describe('getValueName', () => {
         expect(output).toBe('1');
     });
 
-    it('new Number', () => {
+    it('should work with new Number', () => {
         const value = 1;
 
         const output = getValueName(new Number(value), { includeTypeName: true });
@@ -192,7 +193,7 @@ describe('getValueName', () => {
         expect(output).toBe('a Number: 1');
     });
 
-    it('Array', () => {
+    it('should work with Array', () => {
         const value = [1, 2, 3];
 
         const output = getValueName(value, { includeTypeName: true });
@@ -200,7 +201,7 @@ describe('getValueName', () => {
         expect(output).toBe('an Array: [1, 2, ...]');
     });
 
-    it('Array without type name', () => {
+    it('should work with Array without type name', () => {
         const value = [1, 2, 3];
 
         const output = getValueName(value);
@@ -208,7 +209,7 @@ describe('getValueName', () => {
         expect(output).toBe('[1, 2, ...]');
     });
 
-    it('new Array', () => {
+    it('should work with new Array', () => {
         const array = new Array();
 
         array.push(1);
@@ -220,7 +221,7 @@ describe('getValueName', () => {
         expect(output).toBe('an Array: [1, 2, ...]');
     });
 
-    it('String', () => {
+    it('should work with String', () => {
         const value = 'str';
 
         const output = getValueName(value, { includeTypeName: true });
@@ -228,7 +229,7 @@ describe('getValueName', () => {
         expect(output).toBe('a String: "str"');
     });
 
-    it('String without type name', () => {
+    it('should work with String without type name', () => {
         const value = 'str';
 
         const output = getValueName(value);
@@ -236,7 +237,7 @@ describe('getValueName', () => {
         expect(output).toBe('"str"');
     });
 
-    it('new String', () => {
+    it('should work with new String', () => {
         const value = 'str';
 
         const output = getValueName(new String(value), { includeTypeName: true });
@@ -244,7 +245,7 @@ describe('getValueName', () => {
         expect(output).toBe('a String: "str"');
     });
 
-    it('Boolean', () => {
+    it('should work with Boolean', () => {
         const value = true;
 
         const output = getValueName(value, { includeTypeName: true });
@@ -252,7 +253,7 @@ describe('getValueName', () => {
         expect(output).toBe('a Boolean: true');
     });
 
-    it('Boolean without type name', () => {
+    it('should work with Boolean without type name', () => {
         const value = true;
 
         const output = getValueName(value);
@@ -260,7 +261,7 @@ describe('getValueName', () => {
         expect(output).toBe('true');
     });
 
-    it('new Boolean', () => {
+    it('should work with new Boolean', () => {
         const value = true;
 
         const output = getValueName(new Boolean(value), { includeTypeName: true });
@@ -268,7 +269,7 @@ describe('getValueName', () => {
         expect(output).toBe('a Boolean: true');
     });
 
-    it('undefined', () => {
+    it('should work with undefined', () => {
         let value;
 
         const output = getValueName(value, { includeTypeName: true });
@@ -276,7 +277,7 @@ describe('getValueName', () => {
         expect(output).toBe('undefined');
     });
 
-    it('undefined without type name', () => {
+    it('should work with undefined without type name', () => {
         let value;
 
         const output = getValueName(value);
@@ -284,7 +285,7 @@ describe('getValueName', () => {
         expect(output).toBe('undefined');
     });
 
-    it('null', () => {
+    it('should work with null', () => {
         const value = null;
 
         const output = getValueName(value, { includeTypeName: true });
@@ -292,7 +293,7 @@ describe('getValueName', () => {
         expect(output).toBe('null');
     });
 
-    it('null without type name', () => {
+    it('should work with null without type name', () => {
         const value = null;
 
         const output = getValueName(value);
@@ -300,7 +301,7 @@ describe('getValueName', () => {
         expect(output).toBe('null');
     });
 
-    it('NaN', () => {
+    it('should work with NaN', () => {
         const value = '' / '';
 
         const output = getValueName(value, { includeTypeName: true });
@@ -308,7 +309,7 @@ describe('getValueName', () => {
         expect(output).toBe('NaN');
     });
 
-    it('NaN without type name', () => {
+    it('should work with NaN without type name', () => {
         const value = '' / '';
 
         const output = getValueName(value);
@@ -316,7 +317,7 @@ describe('getValueName', () => {
         expect(output).toBe('NaN');
     });
 
-    it('Infinity', () => {
+    it('should work with Infinity', () => {
         const value = 1 / '';
 
         const output = getValueName(value, { includeTypeName: true });
@@ -324,7 +325,7 @@ describe('getValueName', () => {
         expect(output).toBe('a Number: Infinity');
     });
 
-    it('Infinity without type name', () => {
+    it('should work with Infinity without type name', () => {
         const value = 1 / '';
 
         const output = getValueName(value);
@@ -332,7 +333,15 @@ describe('getValueName', () => {
         expect(output).toBe('Infinity');
     });
 
-    it('Date', () => {
+    it('should work with -Infinity without type name', () => {
+        const value = (1 / '') * -1;
+
+        const output = getValueName(value);
+
+        expect(output).toBe('-Infinity');
+    });
+
+    it('should work with Date', () => {
         const value = new Date();
 
         const output = getValueName(value, { includeTypeName: true });
@@ -340,7 +349,7 @@ describe('getValueName', () => {
         expect(output).toMatch(/a Date: "\d.*"/);
     });
 
-    it('Date without type name', () => {
+    it('should work with Date without type name', () => {
         const value = new Date();
 
         const output = getValueName(value);
@@ -348,7 +357,7 @@ describe('getValueName', () => {
         expect(output).toMatch(/"\d.*"/);
     });
 
-    it('String with espaced chars', () => {
+    it('should work with String with espaced chars', () => {
         const value = 'hey "someone",\n this isn\'t a letter.\f\r';
 
         const output = getValueName(value, { includeTypeName: true });

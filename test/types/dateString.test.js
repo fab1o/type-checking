@@ -44,6 +44,12 @@ describe('Types.dateString', () => {
                 },
                 ['2020-05-18T00:00:00.000Z']
             );
+            typecheck(
+                {
+                    date: Types.dateString
+                },
+                ['2020-05-18']
+            );
         }).not.toThrow();
     });
 });

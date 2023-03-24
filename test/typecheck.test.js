@@ -51,10 +51,18 @@ describe('typecheck', () => {
         }).toThrow('typecheck(...) params expected an Object built with Types.');
     });
 
-    it('match error message when input is given as null', () => {
+    it('match error message when name is given as null', () => {
         expect(() => {
             typecheck({ name: Types.string }, [null]);
         }).toThrow('{name} name expected a String but received null.');
+    });
+
+    it('match error message when input is given as null', () => {
+        expect(() => {
+            typecheck({ name: Types.string }, null);
+        }).toThrow(
+            'typecheck(...) arguments expected an Array or an Object. Make sure you invoke typecheck correctly.'
+        );
     });
 
     it('match error message when input is given as undefined', () => {
@@ -94,6 +102,17 @@ describe('typecheck', () => {
         }).toThrow(MyCustomError);
     });
 
+    it('should fail when user input is an object with no data', () => {
+        expect(() => {
+            typecheck(
+                {
+                    name: Types.string
+                },
+                {}
+            );
+        }).toThrow('{name} name expected a String but received undefined.');
+    });
+
     it('should not fail when user input is an object', () => {
         expect(() => {
             typecheck(
@@ -120,6 +139,18 @@ describe('typecheck', () => {
                     active: Types.boolean
                 },
                 ['', 2020, true]
+            );
+        }).not.toThrow();
+    });
+
+    it('should not fail when user input has more arguments than params', () => {
+        expect(() => {
+            typecheck(
+                {
+                    name: Types.string,
+                    year: Types.number
+                },
+                ['', 2020, 'testing', 'more', 'arguments']
             );
         }).not.toThrow();
     });

@@ -18,6 +18,7 @@ describe('Types.array.of.object()', () => {
                 {
                     objs: Types.array.of.object()
                 },
+                // eslint-disable-next-line no-sparse-arrays
                 [[, , , ,]]
             );
         }).toThrow(

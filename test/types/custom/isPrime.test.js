@@ -1,4 +1,4 @@
-import { Check, Types, typecheck } from '../../../src';
+import { Types, typecheck } from '../../../src';
 
 import {
     isPrime,

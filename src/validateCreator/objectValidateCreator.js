@@ -1,4 +1,4 @@
-import Check from '@fab1o/check-types';
+import { Check } from '@fab1o/check-types';
 
 import { checkValue } from './util/checkValue';
 import { extendValidateCreator } from './extendValidateCreator';
@@ -6,14 +6,20 @@ import { extendValidateCreator } from './extendValidateCreator';
 /**
  * @param {TypeChecking.Type} type - The object type.
 //  * @param {Array<*>} [firstTypeExpectedArgs] - Expected values for the first type of the combinatory type.
- * @param {Object<TypeChecking.Type>} [objParams=null] - Params object built with Types.
+ * @param {Object<TypeChecking.Type>} [objParams] - Params object built with Types.
  * @desc Creates a checker for Types.object type.
  * @throws {Error} When type checking fails.
  * @returns {Function} Validator function for {@link Types.object}.
  */
 // export function objectValidateCreator(type, firstTypeExpectedArgs, objParams = null) {
-export function objectValidateCreator(type, objParams = null) {
+export function objectValidateCreator(type, objParams) {
     const { isArray } = type;
+
+    // if (Check.not.nonEmptyObject(objParams) && Check.not.undefined(objParams)) {
+    //     throw TypeError(
+    //         'typecheck(...) params inside Types.object() expected a non-empty Object or undefined.'
+    //     );
+    // }
 
     const isNested = Check.nonEmptyObject(objParams);
 
