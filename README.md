@@ -107,7 +107,7 @@ It also supports logging a warn message without throwing an error using `.warn` 
 ```js
 const params = {
     name: Types.string.warn,
-    year: Types.numbe.warn
+    year: Types.number.warn
 };
 
 const data = {};
